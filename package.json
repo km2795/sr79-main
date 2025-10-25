@@ -8,8 +8,10 @@
   "main": "main.ts",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node dist/main.ts",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/main.ts"
+    "start": "npm run build && node src/main.js",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/main.ts",
+    "build:prod": "tsc --outDir dist",
+    "prod": "NODE_ENV=production npm run build:prod && node dist/main.js"
   },
   "devDependencies": {
     "@types/node": "^24.9.1",
