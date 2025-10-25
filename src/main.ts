@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const port = process.env["PORT"];
+const port = process.env["PORT"] || 2795;
 
 const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
   if (req.url === "/") {
