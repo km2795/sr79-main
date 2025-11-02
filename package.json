@@ -4,20 +4,34 @@
   "description": "Main Personal Server",
   "license": "ISC",
   "author": "Kunal Sharma",
-  "type": "module",
   "main": "main.ts",
   "scripts": {
     "build": "tsc",
     "start": "npm run build && node src/main.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/main.ts",
     "build:prod": "tsc --outDir dist",
-    "prod": "NODE_ENV=production npm run build:prod && node dist/main.js"
+    "prod": "NODE_ENV=production npm run build:prod && node dist/main.js",
+    "build:pack": "webpack"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.28.5",
+    "@babel/preset-react": "^7.28.5",
     "@types/node": "^24.9.1",
+    "@types/react": "19.2.2",
+    "babel-loader": "^10.0.0",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "css-loader": "^7.1.2",
     "dotenv": "^17.2.3",
     "nodemon": "^3.1.10",
+    "react-compiler-webpack": "^0.2.1",
+    "style-loader": "^4.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "webpack": "^5.102.1",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   }
 }
