@@ -6,12 +6,11 @@
   "author": "Kunal Sharma",
   "main": "main.ts",
   "scripts": {
-    "build": "tsc",
-    "start": "npm run build && node src/main.js",
+    "build:main": "tsc",
+    "build:swish": "rm -rf ./src/dist/ && webpack --config webpack.config.js --mode development --watch",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/main.ts",
-    "build:prod": "tsc --outDir dist",
-    "prod": "NODE_ENV=production npm run build:prod && node dist/main.js",
-    "build:pack": "webpack"
+    "start": "npm run build && node src/main.js",
+    "prod": "NODE_ENV=production npm run build:prod && node dist/main.js"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.28.5",

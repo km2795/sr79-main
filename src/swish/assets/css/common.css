@@ -1,0 +1,75 @@
+.app-default-box-welcome-screen {
+  text-align: center;
+  border-bottom: 0px !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 2px !important;
+  box-shadow: 2px 1px 20px 0px rgba(0, 0, 0, 0.1) !important;
+  padding: 4px 10px !important;
+  font-size: 14px !important;
+  position: fixed;
+  inset: 10px;
+  width: 80%;
+  height: 80%;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+
+  /* To keep the children centered. Using Grid Layout. */
+  display: grid;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.app-default-navigation-button-welcome-screen {
+  border: 0px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 2px 1px 20px 0px rgba(0, 0, 0, 0.1) !important;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 10%;
+}
+
+/* To keep the top container items in columns. */
+.welcome-screen-container-top {
+  display: grid;
+  grid-auto-flow: column;
+}
+
+/* To push the back button (top navigation) to far left. */
+.welcome-screen-top-navigation-goback {
+  text-align: left;
+}
+
+/* To push the forward/front button (top navigation) to far right. */
+.welcome-screen-top-navigation-gofront {
+  text-align: right;
+}
+
+.app-default-input {
+  padding: 12px 15px;
+  border: 2px solid #ccc;
+  border-radius: 8px; /* Rounded corners */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+  outline: none; /* Remove default outline */
+}
+
+.app-default-input::placeholder {
+  color: #999; /* Placeholder text color */
+}
+
+.app-default-input:focus {
+  border-color: #007bff; /* Highlight border on focus */
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2); /* Enhanced shadow on focus */
+}
+
+.app-default-input:hover {
+  border-color: #999; /* Subtle border change on hover */
+}
+
+.welcome-screen-top-navigation-button-goback {}
+
+.welcome-screen-header-side-banner {}

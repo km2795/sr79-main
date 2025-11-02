@@ -1,0 +1,30 @@
+.welcome-screen-container-middle {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.signin-button-container, .signup-button-container {
+  padding: 15px 20px 15px 20px;
+  margin: 30px 0px 30px 0px;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 2px !important;
+  box-shadow: 2px 1px 20px 0px rgba(0, 0, 0, 0.1) !important;
+}
+
+.welcome-screen-container-bottom {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.move-forward-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.move-forward-icon {
+  width: 2rem;
+  height: 2rem;
+}

@@ -1,0 +1,6 @@
+#root {
+  /* To keep the children centered. */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
