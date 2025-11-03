@@ -4,6 +4,7 @@ import WelcomeScreen from "./WelcomeScreen";
 import Signin from "./Signin";
 import Signup from "./Signup";
 import "../assets/css/main.css";
+import ChatView from "./ChatView";
 
 
 function App() {

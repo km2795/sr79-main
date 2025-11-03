@@ -28,7 +28,7 @@ function WelcomeScreen({authScreenChange}) {
       {/* May need it in future.
       <div className="welcome-screen-container-bottom">
         <div className="move-forward-icon-container">
-          <img className="move-forward-icon app-default-navigation-button-welcome-screen" src="../../public/forward.png" />
+          <img className="move-forward-icon app-default-navigation-button-welcome-screen" src="../../public/images/forward.png" />
         </div>
       </div> */}
     </div>

@@ -1,3 +1,17 @@
+@font-face {
+  font-family: "montserrat";
+  src: url("../../../public/fonts/Montserrat-Regular.ttf")
+}
+
+@font-face {
+  font-family: "montserrat-medium";
+  src: url("../../../public/fonts/Montserrat-Medium.ttf")
+}
+
+* {
+  font-family: "montserrat-medium";
+}
+
 .app-default-box-welcome-screen {
   text-align: center;
   border-bottom: 0px !important;
@@ -69,7 +83,3 @@
 .app-default-input:hover {
   border-color: #999; /* Subtle border change on hover */
 }
-
-.welcome-screen-top-navigation-button-goback {}
-
-.welcome-screen-header-side-banner {}

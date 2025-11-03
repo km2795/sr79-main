@@ -23,14 +23,14 @@ function Signin({authScreenChange}) {
       <div className="welcome-screen-container-top">
         <div className="signin-container-top-navigation">
           <div className="welcome-screen-top-navigation-goback" onClick={handleBackNavigation}>
-            <img className="app-default-navigation-button-welcome-screen" src="../../public/left.png" />
+            <img className="app-default-navigation-button-welcome-screen" src="../../public/images/left.png" />
           </div>
         </div>
         <div className="signin-container-top-banner welcome-screen-header-side-banner">
           <h2>Sign In</h2>
         </div>
         <div className="welcome-screen-top-navigation-gofront" onClick={handleFrontNavigation}>
-          <img className="app-default-navigation-button-welcome-screen" src="../../public/right.png" />
+          <img className="app-default-navigation-button-welcome-screen" src="../../public/images/right.png" />
         </div>
       </div>
       <div className="signin-container-middle">
@@ -43,7 +43,7 @@ function Signin({authScreenChange}) {
       </div>
       <div className="signin-container-bottom">
         <div className="move-forward-icon-container" onClick={handleSignIn}>
-          <img className="move-forward-icon app-default-navigation-button-welcome-screen" src="../../public/forward.png" />
+          <img className="move-forward-icon app-default-navigation-button-welcome-screen" src="../../public/images/forward.png" />
         </div>
       </div>
     </div>
