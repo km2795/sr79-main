@@ -1,7 +1,7 @@
 import React from "react";
 import "../assets/css/ChatView.css";
 
-function ChatView({ username }) {
+function ChatView({ recipient }) {
   return (
     <div className="chat-view-container">
 
@@ -14,7 +14,7 @@ function ChatView({ username }) {
             {/* User's profit photo. */}
             <img className="chat-view-user-profile-photo-icon chat-view-default-icon-sizing" src="../../public/images/user.png" />
             {/* Username is displayed here. */}
-            <p className="chat-view-banner-username">{username}</p>
+            <p className="chat-view-banner-username">{recipient}</p>
           </div>
 
 
