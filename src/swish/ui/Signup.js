@@ -1,21 +1,32 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import "../assets/css/common.css";
 import "../assets/css/Signup.css"
 
-function Signup({authScreenChange}) {
-  
-  const [mobileNumber, setMobileNumber] = useState("");
+function Signup({screenChange, getUser}) {
 
+  //mobileNumber (is userName).
+  const [mobileNumber, setMobileNumber,] = useState("");
+
+  const [password, setPassword] = useState("");
+
+  /* To show messages related to sign up process. If the hiddenMessage string
+   * is empty, the message element would remain hidden, otherwise it will be shown.
+   */
+  const [hiddenMessage, setHiddenMessage] = useState("", );
+
+  // Go back to Welcome Screen.
   function handleBackNavigation() {
-    authScreenChange(0);
+    screenChange(0);
   }
   
+  // Go to Sign In Screen.
   function handleFrontNavigation() {
-    authScreenChange(1);
+    screenChange(1);
   }
   
-  function handleSignUp() {
-    console.log(mobileNumber)
+  // Handle the Sign-Up.
+  async function handleSignUp() {
+    const response = await getUser(mobileNumber, password);
   }
 
   return (
@@ -40,6 +51,15 @@ function Signup({authScreenChange}) {
           type="number" 
           value={mobileNumber} 
           onChange={(e) => setMobileNumber(e.target.value)} />
+
+        <input
+          className="signup-input app-default-input"
+          placeholder="Password"
+          value={password}
+          type="password"
+          onChange={(e) => setPassword(e.target.value)} />
+
+        {hiddenMessage.length > 0 ? <div className="signup-input hidden-message"><p>{hiddenMessage}</p></div>: ""}
       </div>
       <div className="signup-container-bottom">
         <div className="move-forward-icon-container" onClick={handleSignUp}>

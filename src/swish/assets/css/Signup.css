@@ -1,0 +1,8 @@
+.signup-container-middle {
+  display: grid;
+  justify-items: center;
+}
+
+.signup-container-middle * {
+  margin: 10px;
+}
