@@ -1,131 +1,65 @@
-import http, { IncomingMessage, ServerResponse } from "http";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-import fs from "fs/promises";
+import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
-import mimeTypes from "./mimeTypes.ts";
-import checkDirectoryConfig from "./config.ts";
+import { router as swishRouter } from './routes/swish.ts';
+import UserHandler from './UserHandler.ts';
 
+// Configuration
 dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const port = process.env["PORT"] || 2795;
 
-/**
- * To Serve Static Files.
- */
-async function serveStaticFile(filePath: string): Promise<{ data: any; type: string }> {
-  const ext = path.extname(filePath);
-  const type = mimeTypes[ext] || "application/octet-stream";
-  const data = await fs.readFile(filePath);
-  return { data, type };
-}
+// Initialize express app
+const app = express();
 
-const SWISH_PATH = path.join(__dirname, "swish"); // no leading slash
+// Security middleware
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
+app.use(rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+}));
 
-function joinSafe(base: string, rel: string) {
-  // remove leading slashes from rel, resolve, and ensure it stays inside base
-  const safeRel = rel.replace(/^\/+/, "");
-  const resolved = path.resolve(base, safeRel);
-  const baseResolved = path.resolve(base);
-  if (!resolved.startsWith(baseResolved + path.sep) && resolved !== baseResolved) {
-    throw new Error("Forbidden");
-  }
-  return resolved;
-}
+// Static file serving
+app.use('/swish', express.static(path.join(__dirname, 'swish')));
 
-const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
-  try {
-    // only allow GET/HEAD
-    if (req.method && !["GET", "HEAD"].includes(req.method)) {
-      res.writeHead(405, { "Content-Type": "text/plain" });
-      res.end("Method Not Allowed");
-      return;
-    }
-
-    const rawUrl = req.url || "/";
-    const pathname = rawUrl.split("?")[0] || "/";
-
-    if (pathname === "/") {
-      res.writeHead(200, { "Content-Type": "text/plain" });
-      res.end("Channel #SR79 Active");
-      return;
-    }
-
-    if (pathname.startsWith("/swish")) {
-      // redirect /swish -> /swish/
-      if (pathname === "/swish") {
-        res.writeHead(301, { Location: "/swish/" });
-        res.end();
-        return;
-      }
-
-      // serve index at /swish/
-      if (pathname === "/swish/") {
-        try {
-          const indexPath = joinSafe(SWISH_PATH, "index.html");
-          const { data, type } = await serveStaticFile(indexPath);
-          res.writeHead(200, { "Content-Type": type });
-          res.end(data);
-        } catch {
-          res.writeHead(404, { "Content-Type": "text/plain" });
-          res.end("Swish Index Not Found");
-        }
-        return;
-      }
-
-      // asset requests under /swish/...
-      try {
-        const relative = pathname.replace(/^\/swish\//, "");
-        let filePath = joinSafe(SWISH_PATH, relative);
-        // if a directory, serve index.html
-        if (filePath.endsWith(path.sep)) filePath = path.join(filePath, "index.html");
-        const { data, type } = await serveStaticFile(filePath);
-        res.writeHead(200, { "Content-Type": type });
-        res.end(data);
-      } catch (err) {
-        res.writeHead(404, { "Content-Type": "text/plain" });
-        res.end("Not Found");
-      }
-      return;
-    }
-
-    // fallback static -- serve only from project src directory and sanitize
-    try {
-      const STATIC_BASE = path.join(__dirname); // or path.join(__dirname, 'public');
-      const rel = pathname.replace(/^\//, "");
-      const filePath = joinSafe(STATIC_BASE, rel);
-      const { data, type } = await serveStaticFile(filePath);
-      res.writeHead(200, { "Content-Type": type });
-      res.end(data);
-    } catch {
-      res.writeHead(404, { "Content-Type": "text/plain" });
-      res.end("Not Found");
-    }
-  } catch (err) {
-    console.log(err);
-    res.writeHead(500, { "Content-Type": "text/plain" });
-    res.end("Internal Server Error");
-  }
+// Routes
+app.get('/', (_req, res) => {
+  res.end('Channel #SR79 Active');
 });
 
+// Mount Swish router
+app.use('/swish', swishRouter);
 
-/**
- * Main function to start the server.
- */
+// Error handling middleware
+app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error(err.stack);
+  res.status(500).send('Internal Server Error');
+});
+
+// 404 handler
+app.use((_req, res) => {
+  res.status(404).send('Not Found');
+});
+
+// Start server
 async function startServer() {
   try {
-    //Configuration check.
-    await checkDirectoryConfig();
-
-    server.listen(port, () => {
+    const userHandler = new UserHandler();
+    await userHandler.checkDirectoryConfig({});
+    
+    app.listen(port, () => {
       console.log(`Channel SR79 Active; Port: ${port}`);
     });
-
-  } catch (e: any) {
-    console.error(`Server Error during startup: ${e.message || e}`);
+  } catch (error) {
+    console.error('Server Error during startup:', error);
     process.exit(1);
   }
 }
