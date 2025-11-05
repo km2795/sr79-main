@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import fs from "fs/promises";
 
 import mimeTypes from "./mimeTypes.ts";
+import checkDirectoryConfig from "./config.ts";
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ const port = process.env["PORT"] || 2795;
 /**
  * To Serve Static Files.
  */
-async function serveStaticFile(filePath: string): Promise<{ data: Buffer; type: string }> {
+async function serveStaticFile(filePath: string): Promise<{ data: any; type: string }> {
   const ext = path.extname(filePath);
   const type = mimeTypes[ext] || "application/octet-stream";
   const data = await fs.readFile(filePath);
@@ -110,6 +111,23 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
   }
 });
 
-server.listen(port, () => {
-  console.log(`Channel SR79 Active; Port: ${port}`)
-});
+
+/**
+ * Main function to start the server.
+ */
+async function startServer() {
+  try {
+    //Configuration check.
+    await checkDirectoryConfig();
+
+    server.listen(port, () => {
+      console.log(`Channel SR79 Active; Port: ${port}`);
+    });
+
+  } catch (e: any) {
+    console.error(`Server Error during startup: ${e.message || e}`);
+    process.exit(1);
+  }
+}
+
+startServer();
