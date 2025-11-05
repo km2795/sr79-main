@@ -9,16 +9,14 @@
 }
 
 * {
-  font-family: "montserrat-medium";
+  font-family: "montserrat-medium", serif;
 }
 
 .app-default-box-welcome-screen {
   text-align: center;
-  border-bottom: 0px !important;
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
   border-radius: 2px !important;
-  box-shadow: 2px 1px 20px 0px rgba(0, 0, 0, 0.1) !important;
-  padding: 4px 10px !important;
+  box-shadow: 2px 1px 20px 0 rgba(0, 0, 0, 0.1) !important;
   font-size: 14px !important;
   position: fixed;
   inset: 10px;
