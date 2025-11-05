@@ -2,14 +2,14 @@ import React from "react";
 import "../assets/css/common.css";
 import "../assets/css/WelcomeScreen.css";
 
-function WelcomeScreen({authScreenChange}) {
+function WelcomeScreen({screenChange}) {
   
   function handleSignInClick() {
-    authScreenChange(1);
+    screenChange(1);
   }
   
   function handleSignUpClick() {
-    authScreenChange(2);
+    screenChange(2);
   }
   
   return (
@@ -25,7 +25,7 @@ function WelcomeScreen({authScreenChange}) {
         <div className="signup-button-container" onClick={handleSignUpClick}>Sign Up</div>
       </div>
       
-      {/* May need it in future.
+      {/* May need it in the future.
       <div className="welcome-screen-container-bottom">
         <div className="move-forward-icon-container">
           <img className="move-forward-icon app-default-navigation-button-welcome-screen" src="../../public/images/forward.png" />

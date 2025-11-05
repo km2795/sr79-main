@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import "../assets/css/common.css";
 import "../assets/css/Signin.css";
 
-function Signin({authScreenChange}) {
+function Signin({screenChange, getUser}) {
   
   const [mobileNumber, setMobileNumber] = useState("");
   
   function handleBackNavigation() {
-    authScreenChange(0);
+    screenChange(0);
   }
   
   function handleFrontNavigation() {
-    authScreenChange(2);
+    screenChange(2);
   }
   
   function handleSignIn() {
