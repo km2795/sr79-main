@@ -6,7 +6,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { router as swishRouter } from './routes/swish.ts';
-import UserHandler from './UserHandler.ts';
+import * as UserHandler from './UserHandler.ts';
+import * as ChatHandler from "./ChatHandler.ts";
 
 // Configuration
 dotenv.config();
@@ -63,9 +64,9 @@ app.use((_req, res) => {
 // Start server
 async function startServer() {
   try {
-    const userHandler = new UserHandler();
-    await userHandler.checkDirectoryConfig({});
-    
+    await UserHandler.checkDirectoryConfig();
+    await ChatHandler.checkChatIndexFile({});
+
     app.listen(port, () => {
       console.log(`Channel SR79 Active; Port: ${port}`);
     });
