@@ -1,30 +1,34 @@
-import path from "path";
-import { fileURLToPath } from "url";
+const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export default {
-  entry: './src/swish/index.js',
+module.exports = {
+  entry: path.resolve(__dirname, 'src', 'swish', 'index.js'),
   output: {
-    path: path.resolve(__dirname, './src/dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, "src", 'dist'),
+    publicPath: '/swish/' // <-- critical: emitted asset URLs will be prefixed with /swish/
   },
+  devtool: "source-map",
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.jsx?$/i,
         exclude: /node_modules/,
-        use: 'babel-loader'
+        use: { loader: 'babel-loader' } // or your ts/js loader
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"]
+        use: ['style-loader', 'css-loader']
       }
     ]
   },
-  resolve: {
-    extensions: ['.js', '.jsx']
-  },
-  mode: 'development'
+  plugins: [
+    // copy static files (index.html, raw assets that are not imported)
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, 'src', 'public', 'images'), to: path.join(__dirname, "src", "dist", "public", "images") }
+      ]
+    })
+  ],
+  mode: 'production'
 };

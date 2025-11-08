@@ -7,7 +7,8 @@
   "main": "main.ts",
   "scripts": {
     "build:main": "tsc",
-    "build:swish": "rm -rf ./src/dist/ && webpack --config webpack.config.js --mode development --watch",
+    "build:swish": "webpack --config webpack.config.js --mode development --watch",
+    "build": "tsc && npm run build:swish",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/main.ts",
     "start": "npm run build && node src/main.js",
     "prod": "NODE_ENV=production npm run build:prod && node dist/main.js"
@@ -21,6 +22,7 @@
     "@types/react": "19.2.2",
     "babel-loader": "^10.0.0",
     "babel-plugin-react-compiler": "^1.0.0",
+    "copy-webpack-plugin": "^13.0.1",
     "css-loader": "^7.1.2",
     "dotenv": "^17.2.3",
     "nodemon": "^3.1.10",

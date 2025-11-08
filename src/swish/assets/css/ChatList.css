@@ -1,0 +1,66 @@
+.chat-list-container {
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px !important;
+  box-shadow: 2px 1px 20px 0 rgba(0, 0, 0, 0.1);
+  font-size: 14px !important;
+  position: fixed;
+  inset: 10px;
+  width: 90%;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+
+  /* To keep the children centered. Using Grid Layout. */
+  display: grid;
+  /* justify-content: center; */
+  align-items: center;
+  align-content: space-between;
+}
+
+.chat-list-container-top {
+  display: flex;
+  padding: 10px;
+  box-shadow: 2px 1px 20px 0 rgba(0, 0, 0, 0.1);
+}
+
+.chat-list-container-top-banner {
+  display: flex;
+  flex: 1;
+}
+
+.chat-list-user-profile {
+  display: flex;
+  flex: 1;
+  align-items: center;
+}
+
+.chat-list-banner-username {
+  margin: 0 20px;
+  font-size: 20px;
+}
+
+.chat-list-banner-action-menu {
+  display: flex;
+  align-items: center;
+}
+
+.chat-list-banner-action-menu-icon {
+  box-shadow: none !important;
+}
+
+.chat-list-default-icon-container {
+  padding: 15px 20px 15px 20px;
+  margin: 30px 0 30px 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px !important;
+  box-shadow: 2px 1px 20px 0px rgba(0, 0, 0, 0.1);
+}
+
+.chat-list-default-icon-sizing {
+  border: 0 solid rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 1px 20px 0 rgba(0, 0, 0, 0.1);
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+}

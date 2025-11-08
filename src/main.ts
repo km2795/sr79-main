@@ -27,8 +27,10 @@ app.use(rateLimit({
   max: 100 // limit each IP to 100 requests per windowMs
 }));
 
-// Static file serving
-app.use('/swish', express.static(path.join(__dirname, 'swish')));
+// Static file serving - Order matters!
+// Serve compiled files from dist first
+app.use('/swish', express.static(path.join(__dirname, 'dist')));
+app.use('/swish', express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.get('/', (_req, res) => {

@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import "../assets/css/common.css";
 import "../assets/css/Signup.css"
 
-function Signup({screenChange, getUser}) {
+function Signup({screenChange, checkUser}) {
 
   //mobileNumber (is userName).
   const [mobileNumber, setMobileNumber,] = useState("");
@@ -26,7 +26,15 @@ function Signup({screenChange, getUser}) {
   
   // Handle the Sign-Up.
   async function handleSignUp() {
-    const response = await getUser(mobileNumber, password);
+    const response = await checkUser(mobileNumber, password);
+
+    // If user's data is store, move to chat list screen.
+    if (response) {
+      screenChange(3);
+    } else {
+      // If something went wrong, show error.
+      setHiddenMessage("Internal error occurred. Please try again after sometime.");
+    }
   }
 
   return (
@@ -34,14 +42,14 @@ function Signup({screenChange, getUser}) {
       <div className="welcome-screen-container-top">
         <div className="signup-container-top-navigation">
           <div className="welcome-screen-top-navigation-goback" onClick={handleBackNavigation}>
-            <img className="app-default-navigation-button-welcome-screen" src="../../public/images/left.png" />
+            <img className="app-default-navigation-button-welcome-screen" src="./public/images/left.png" />
           </div>
         </div>
         <div className="signup-container-top-banner welcome-screen-header-side-banner">
           <h2>Sign Up</h2>
         </div>
         <div className="welcome-screen-top-navigation-gofront" onClick={handleFrontNavigation}>
-          <img className="app-default-navigation-button-welcome-screen" src="../../public/images/right.png" />
+          <img className="app-default-navigation-button-welcome-screen" src="./public/images/right.png" />
         </div>
       </div>
       <div className="signup-container-middle">
@@ -63,7 +71,7 @@ function Signup({screenChange, getUser}) {
       </div>
       <div className="signup-container-bottom">
         <div className="move-forward-icon-container" onClick={handleSignUp}>
-          <img className="move-forward-icon app-default-navigation-button-welcome-screen" src="../../public/images/forward.png" />
+          <img className="move-forward-icon app-default-navigation-button-welcome-screen" src="./public/images/forward.png" />
         </div>
       </div>
     </div>
