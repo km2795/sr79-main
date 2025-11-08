@@ -24,7 +24,9 @@ router.post('/user', async (req, res) => {
 
             // If the authType is sign-in, then send the chat
             // history as well otherwise for sign-up empty list.
-            chatHistory: userData.authType === "sign-in" ? ChatHandler.CHAT_INDEX : []
+            chatHistory: (userData.authType === "sign-in")
+                ? ChatHandler.CHAT_INDEX[userData.id]
+                : []
           });
         } else {
           res.json({
