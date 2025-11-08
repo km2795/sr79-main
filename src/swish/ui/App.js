@@ -11,6 +11,8 @@ function App() {
   /* Which screen is displayed currently. */
   const [screenIndex, setScreenIndex] = useState(0);
   const [userName, setUserName] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
+  const [currentRecipient, setCurrentRecipient] = useState("");
 
   /*
    * Screen Component to be displayed.
@@ -21,9 +23,11 @@ function App() {
 
   const userProps = {
     ...useNavigationProps(setScreenIndex),
-    ...useUserAuthProps(setUserName),
-    ...useChatProps(),
-    userName
+    ...useUserAuthProps(setUserName, setChatHistory),
+    ...useChatProps(setCurrentRecipient),
+    userName,
+    chatHistory,
+    currentRecipient
   };
 
   return (

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-function useUserAuthProps(setUserName) {
+function useUserAuthProps(setUserName, setChatHistory) {
 
   /**
    * Function to check if the user exists in the records or not.
@@ -27,6 +27,7 @@ function useUserAuthProps(setUserName) {
       // Set the username, if the status is true.
       if (response.data.status) {
         setUserName(userName)
+        setChatHistory(response.data.chatHistory);
       }
 
       return response.data.status;

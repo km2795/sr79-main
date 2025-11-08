@@ -1,0 +1,37 @@
+.chat-list-directory-item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.chat-list-directory-item:hover {
+  background-color: #f9f9f9;
+}
+
+.chat-list-directory-item-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.chat-list-directory-item-preview {
+  font-size: 14px;
+  color: #666;
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-list-directory-item-timestamp {
+  font-size: 12px;
+  color: #999;
+}
+
+.read-status {
+  font-size: 14px;
+  color: #4caf50;
+  margin-left: 8px;
+}

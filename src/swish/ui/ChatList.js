@@ -3,7 +3,7 @@ import ChatListDirectory from "./ChatListDirectory";
 import AddRecipientDialog from "./AddRecipientDialog";
 import "../assets/css/ChatList.css"
 
-function ChatList({userName, chatHistory}) {
+function ChatList({userName, chatHistory, screenChange, updateCurrentRecipient}) {
 
   /*
    * To show/hide the add recipient dialog box.
@@ -45,10 +45,13 @@ function ChatList({userName, chatHistory}) {
           <div className="chat-list-directory">
             {
               chatHistory.length < 1
-                  ? <div className="chat-list-directory-empty-banner"></div>
-                  : null
+                  ? <div className="chat-list-directory-empty-banner">It's so quiet in here!</div>
+                  : <ChatListDirectory
+                      chatHistory={chatHistory}
+                      screenChange={screenChange}
+                      updateCurrentRecipient={updateCurrentRecipient}
+                    />
             }
-            <ChatListDirectory chatHistory={[]}/>
           </div>
           {showAddRecipientDialog ? <AddRecipientDialog
             onAccept={(e) => console.log(e)}

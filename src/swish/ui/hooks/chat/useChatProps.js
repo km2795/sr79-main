@@ -1,5 +1,9 @@
-function useChatProps() {
-  return { chatHistory: {} };
+function useChatProps(setCurrentRecipient) {
+
+  return {
+    updateCurrentRecipient: (chat) => setCurrentRecipient(chat)
+  }
+
 }
 
 export default useChatProps;
