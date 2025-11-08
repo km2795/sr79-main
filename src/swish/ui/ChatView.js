@@ -40,19 +40,6 @@ function ChatView({ currentRecipient }) {
               <ChatItem key={index} messageInfo={message} />)
           }
 
-          {/*<div className="message recipient">*/}
-          {/*  <div className="text">Hey Kunal, how’s the new layout coming along?</div>*/}
-          {/*  <div className="timestamp">20:23</div>*/}
-          {/*</div>*/}
-          {/*<div className="message self">*/}
-          {/*  <div className="text">Looking good! Just refining the padding and accessibility.</div>*/}
-          {/*  <div className="timestamp">20:24</div>*/}
-          {/*</div>*/}
-          {/*<div className="message recipient">*/}
-          {/*  <div className="text">Nice. Let me know if you want a quick review.</div>*/}
-          {/*  <div className="timestamp">20:25</div>*/}
-          {/*</div>*/}
-
         </div>
       </div>
       
