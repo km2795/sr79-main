@@ -23,11 +23,11 @@ function useUserAuthProps(setUserName) {
       });
 
       // Set the username, if the status is true.
-      if (response.status) {
+      if (response.data.status) {
         setUserName(userName)
       }
 
-      return response.status;
+      return response.data.status;
     } catch (error) {
       console.log(error);
       return false;

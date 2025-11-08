@@ -5,7 +5,6 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-
 import { router as swishRouter } from './routes/swish.ts';
 import UserHandler from './UserHandler.ts';
 
@@ -15,10 +14,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const port = process.env["PORT"] || 2795;
 
-// Initialize express app
 const app = express();
 
-// Security middleware
+/**
+ * Middleware setup.
+ */
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
@@ -27,26 +27,35 @@ app.use(rateLimit({
   max: 100 // limit each IP to 100 requests per windowMs
 }));
 
-// Static file serving - Order matters!
-// Serve compiled files from dist first
+/**
+ * Static Files router.
+ */
 app.use('/swish', express.static(path.join(__dirname, 'dist')));
-app.use('/swish', express.static(path.join(__dirname, 'public')));
+// app.use('/swish', express.static(path.join(__dirname, 'public')));
 
-// Routes
+/**
+ * 'swish' service router.
+ */
+app.use('/swish', swishRouter);
+
+/**
+ * Root URL Handler.
+ */
 app.get('/', (_req, res) => {
   res.end('Channel #SR79 Active');
 });
 
-// Mount Swish router
-app.use('/swish', swishRouter);
-
-// Error handling middleware
+/**
+ * Internal Server Error Handler.
+ */
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err.stack);
   res.status(500).send('Internal Server Error');
 });
 
-// 404 handler
+/**
+ * 404 Handler.
+ */
 app.use((_req, res) => {
   res.status(404).send('Not Found');
 });
