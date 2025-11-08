@@ -13,61 +13,54 @@ const DATA_STORE_DIR = path.join(__dirname, ".data_store");
 /* User Index. */
 const USER_INDEX_FILE = path.join(DATA_STORE_DIR, "user_index.json");
 
+export let USER_INDEX = {};
 
-class UserHandler {
+/**
+ * Checks if the directory are in order.
+ */
+export async function checkDirectoryConfig() {
+  try {
+    // Check if ".data_store" exists.
+    await fs.access(DATA_STORE_DIR);
 
-  constructor() {}
-
-  /**
-   * Checks if the directory are in order.
-   */
-  async checkDirectoryConfig(userIndex: {}) {
     try {
-      // Check if ".data_store" exists.
-      await fs.access(DATA_STORE_DIR);
+      const data = await fs.readFile(USER_INDEX_FILE, "utf8");
+      USER_INDEX = JSON.parse(data);
+      console.log("\n----USER INDEX Setup successfully. ----\n");
 
-      try {
-        const data = await fs.readFile(USER_INDEX_FILE, "utf8");
-        userIndex = JSON.parse(data);
-        console.log("\n----user index setup successfully. ----\n");
-        return userIndex;
-      } catch (err) {
-        console.log(`user_index.json not found: ${err.message}`);
-        await this.createUserIndexFile({});
-      }
     } catch (err) {
-      console.log(`.data_store does not exists: ${err}`);
-      await this.createUserIndexFile({});
+      console.log(`user_index.json not found: ${err.message}`);
+      await createUserIndexFile();
     }
-
-    console.log("\n---- Directory Configurations Loaded ----\n");
+  } catch (err) {
+    console.log(`.data_store does not exists: ${err}`);
+    await createUserIndexFile();
   }
 
-  /**
-   * Creates the user index file and data store directory
-   * if not already created.
-   */
-  async createUserIndexFile(userIndex) {
-    try {
-      await fs.mkdir(DATA_STORE_DIR);
-      console.log("\n----Data Store established... ----\n");
+  console.log("\n---- Directory Configurations Loaded ----\n");
+}
 
-      await fs.writeFile(USER_INDEX_FILE, JSON.stringify(userIndex), "utf8");
-      console.log("\n---- User Index created... ----\n");
-    } catch (err) {
-      console.log(`Internal error occurred: ${err.message}`);
-    }
-  }
+/**
+ * Creates the user index file and data store directory
+ * if not already created.
+ */
+export async function createUserIndexFile() {
+  try {
+    await fs.mkdir(DATA_STORE_DIR);
+    console.log("\n----Data Store established... ----\n");
 
-  async updateUserIndexFile(userIndex) {
-    try {
-      await fs.writeFile(USER_INDEX_FILE, JSON.stringify(userIndex));
-      console.log("\n---- USER INDEX updated... ---- \n");
-    } catch (err) {
-      console.log(`Internal error occurred: ${err.message})`);
-    }
+    await fs.writeFile(USER_INDEX_FILE, JSON.stringify(USER_INDEX), "utf8");
+    console.log("\n---- User Index created... ----\n");
+  } catch (err) {
+    console.log(`Internal error occurred: ${err.message}`);
   }
 }
 
-
-export default UserHandler;
+export async function updateUserIndexFile() {
+  try {
+    await fs.writeFile(USER_INDEX_FILE, JSON.stringify(USER_INDEX));
+    console.log("\n---- USER INDEX updated... ---- \n");
+  } catch (err) {
+    console.log(`Internal error occurred: ${err.message})`);
+  }
+}
