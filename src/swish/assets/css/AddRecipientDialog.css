@@ -1,0 +1,73 @@
+.add-recipient-dialog-container {
+  padding-bottom: 30px;
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(2px);
+  color: #333;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-recipient-dialog-input-container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px 32px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.add-recipient-dialog-input-container h2 {
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+
+.add-recipient-dialog-input {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.add-recipient-dialog-input:focus {
+  border-color: #3f51b5;
+  outline: none;
+}
+
+.add-recipient-dialog-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.add-recipient-dialog-actions-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.add-recipient-dialog-actions-button .accept {
+  background-color: #3f51b5;
+  color: white;
+}
+
+.add-recipient-dialog-actions-button .accept:hover {
+  background-color: #303f9f;
+}
+
+.add-recipient-dialog-actions-button .close {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.add-recipient-dialog-actions-button .close:hover {
+  background-color: #cfcfcf;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(1); }
+  to { opacity: 1; transform: scale(1); }
+}
