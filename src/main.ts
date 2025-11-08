@@ -65,7 +65,7 @@ app.use((_req, res) => {
 async function startServer() {
   try {
     await UserHandler.checkDirectoryConfig();
-    await ChatHandler.checkChatIndexFile({});
+    await ChatHandler.checkChatIndexFile();
 
     app.listen(port, () => {
       console.log(`Channel SR79 Active; Port: ${port}`);

@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import ChatListDirectory from "./ChatListDirectory";
 import AddRecipientDialog from "./AddRecipientDialog";
 import "../assets/css/ChatList.css"
 
@@ -41,6 +42,14 @@ function ChatList({userName, chatHistory}) {
 
 
         <div className="chat-list-container-middle">
+          <div className="chat-list-directory">
+            {
+              chatHistory.length < 1
+                  ? <div className="chat-list-directory-empty-banner"></div>
+                  : null
+            }
+            <ChatListDirectory chatHistory={[]}/>
+          </div>
           {showAddRecipientDialog ? <AddRecipientDialog
             onAccept={(e) => console.log(e)}
             onClose={() => updateAddRecipientDialogVisibility(false)} /> : null}
