@@ -21,7 +21,7 @@ function Signin({screenChange, checkUser}) {
   }
   
   async function handleSignIn() {
-    const response = await checkUser(mobileNumber, password);
+    const response = await checkUser(mobileNumber, password, "sign-in");
 
     // If user checks out, go to user's chat list.
     if (response) {

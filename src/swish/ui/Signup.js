@@ -26,7 +26,7 @@ function Signup({screenChange, checkUser}) {
   
   // Handle the Sign-Up.
   async function handleSignUp() {
-    const response = await checkUser(mobileNumber, password);
+    const response = await checkUser(mobileNumber, password, "sign-up");
 
     // If user's data is store, move to chat list screen.
     if (response) {

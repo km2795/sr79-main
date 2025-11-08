@@ -11,14 +11,16 @@ function useUserAuthProps(setUserName) {
    *
    * @param userName
    * @param password
+   * @param authType
    * @returns {Promise<axios.AxiosResponse<any>>}
    */
-  async function checkUser(userName, password) {
+  async function checkUser(userName, password, authType) {
     try {
       const response = await axios.post("/swish/user/", {
         body: {
           "id": userName,
-          "password": password
+          "password": password,
+          "authType": authType
         }
       });
 
