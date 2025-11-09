@@ -1,74 +1,105 @@
+/* Base container with gradient background */
 .chat-list-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
   background: linear-gradient(to bottom right, #4f46e5, #ec4899);
+  font-family: 'Poppins', sans-serif;
   color: white;
+  overflow: hidden;
 }
 
+/* Top banner section */
 .chat-list-container-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex: 0 0 auto;
   padding: 16px;
 }
 
 .chat-list-container-top-banner {
   display: flex;
-  flex: 1;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .chat-list-user-profile {
   display: flex;
-  flex: 1;
   align-items: center;
+  gap: 12px;
+}
+
+.chat-list-user-profile-photo-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .chat-list-banner-username {
-  margin: 0 20px;
-  font-size: 20px;
-}
-
-.chat-list-banner-action-menu {
-  display: flex;
-  align-items: center;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
 }
 
 .chat-list-banner-action-menu-icon {
-  box-shadow: none !important;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
 }
 
-.chat-list-default-icon-container {
-  padding: 15px 20px 15px 20px;
-  margin: 30px 0 30px 0;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 2px !important;
-  box-shadow: 2px 1px 20px 0px rgba(0, 0, 0, 0.1);
+/* Middle scrollable chat list */
+.chat-list-container-middle {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 8px 16px;
 }
 
-.chat-list-default-icon-sizing {
-  border: 0 solid rgba(0, 0, 0, 0.1);
-  box-shadow: 2px 1px 20px 0 rgba(0, 0, 0, 0.1);
-  width: 3rem;
-  height: 3rem;
+.chat-list-directory-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
+.chat-list-directory-empty-banner {
+  text-align: center;
+  font-size: 16px;
+  opacity: 0.8;
+  margin-top: 40px;
+}
+
+/* Bottom section with button */
 .chat-list-container-bottom {
-  padding: 16px 0;
+  flex: 0 0 auto;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.1);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Maintain visual padding between button and container boundary. */
 .chat-list-add-recipient-button-container {
-  background-color: #6b46c1;
-  padding: 10px 0;
-  border: none;
-  border-radius: 24px;
-  color: white;
-  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  background-color: #6b46c1;
+  padding: 12px 24px;
+  border-radius: 24px;
   cursor: pointer;
+  font-weight: 600;
+  color: white;
+  transition: background 0.3s ease;
+}
+
+.chat-list-add-recipient-button-container:hover {
+  background-color: #553c9a;
+}
+
+.chat-list-add-recipient-button {
+  width: 20px;
+  height: 20px;
+}
+
+/* Default icon sizing override */
+.chat-list-default-icon-sizing,
+.chat-view-default-icon-sizing {
+  width: 24px;
+  height: 24px;
 }
