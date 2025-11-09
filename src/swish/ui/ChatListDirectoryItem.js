@@ -1,4 +1,5 @@
 import React from "react";
+import Utility from "../Utility";
 import "../assets/css/ChatListDirectoryItem.css";
 
 function ChatListDirectoryItem({ recipient, chatInfo, screenChange, updateCurrentRecipient }) {
@@ -17,18 +18,27 @@ function ChatListDirectoryItem({ recipient, chatInfo, screenChange, updateCurren
   };
 
   return (
-      <div className="chat-list-directory-item" onClick={
-        (e) => {
-          screenChange(4);
-          updateCurrentRecipient(recipientInfo);
-        }
-      }>
+    <div className="chat-list-directory-item" onClick={
+      (e) => {
+        screenChange(4);
+        updateCurrentRecipient(recipientInfo);
+      }
+    }>
+      <div className="chat-list-directory-item-left">
+        <div className="chat-list-directory-item-profile-photo"></div>
+      </div>
+
+      <div className="chat-list-directory-item-center">
         <div className="chat-list-directory-item-name">{recipientInfo.recipient}</div>
-        <div className="chat-list-directory-item-preview">
-          <span>{recipientInfo.preview}</span>
-          <span className="chat-list-directory-item-timestamp">{recipientInfo.timestamp}</span>
-        </div>
-      </div>);
+        <div className="chat-list-directory-item-preview">{recipientInfo.preview}</div>
+      </div>
+
+      <div className="chat-list-directory-item-right">
+        <span className="chat-list-directory-item-timestamp">{Utility.modifyDateField(recipientInfo.timestamp)}</span>
+      </div>
+
+    </div>
+  );
 }
 
 export default ChatListDirectoryItem;
