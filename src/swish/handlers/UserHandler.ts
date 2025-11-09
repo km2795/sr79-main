@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /* Data Store directory. */
-const DATA_STORE_DIR = path.join(__dirname, ".data_store");
+const DATA_STORE_DIR = path.join(__dirname, "..", ".data_store");
 
 /* User Index. */
 const USER_INDEX_FILE = path.join(DATA_STORE_DIR, "user_index.json");

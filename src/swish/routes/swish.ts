@@ -1,6 +1,6 @@
 import express from 'express';
-import * as ChatHandler from "../ChatHandler.ts";
-import * as UserHandler from "../UserHandler.ts";
+import * as ChatHandler from "../handlers/ChatHandler.ts";
+import * as UserHandler from "../handlers/UserHandler.ts";
 
 const router = express.Router();
 

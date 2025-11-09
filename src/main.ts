@@ -5,9 +5,9 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { router as swishRouter } from './routes/swish.ts';
-import * as UserHandler from './UserHandler.ts';
-import * as ChatHandler from "./ChatHandler.ts";
+import { router as swishRouter } from './swish/routes/swish.ts';
+import * as UserHandler from './swish/handlers/UserHandler.ts';
+import * as ChatHandler from "./swish/handlers/ChatHandler.ts";
 
 // Configuration
 dotenv.config();

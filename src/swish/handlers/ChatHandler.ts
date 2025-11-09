@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /* Data Store directory. */
-const DATA_STORE_DIR = path.join(__dirname, ".data_store");
+const DATA_STORE_DIR = path.join(__dirname, "..", ".data_store");
 
 /* Chat Index. */
 const CHAT_INDEX_FILE = path.join(DATA_STORE_DIR, "chat_index.json");
