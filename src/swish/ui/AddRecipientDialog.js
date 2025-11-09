@@ -5,6 +5,7 @@ function AddRecipientDialog({ onAccept, onClose }) {
   const [recipient, setRecipient] = React.useState("");
 
   return (
+    <div className="add-recipient-dialog-overlay">
       <div className="add-recipient-dialog-container">
         <div className="add-recipient-dialog-container-top">
           <h2>Add Recipient</h2>
@@ -30,6 +31,7 @@ function AddRecipientDialog({ onAccept, onClose }) {
         </div>
 
       </div>
+    </div>
   );
 }
 

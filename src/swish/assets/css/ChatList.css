@@ -7,6 +7,8 @@
   font-family: 'Poppins', sans-serif;
   color: white;
   overflow: hidden;
+  position: relative;
+  z-index: 0;
 }
 
 /* Top banner section */
