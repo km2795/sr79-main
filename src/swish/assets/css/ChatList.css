@@ -4,18 +4,13 @@
   border-radius: 2px !important;
   box-shadow: 2px 1px 20px 0 rgba(0, 0, 0, 0.1);
   font-size: 14px !important;
-  position: fixed;
-  inset: 10px;
-  width: 90%;
-  max-width: 100%;
-  max-height: 100%;
   margin: auto;
 
   /* To keep the children centered. Using Grid Layout. */
   display: grid;
   /* justify-content: center; */
   align-items: center;
-  align-content: space-between;
+  align-content: baseline;
 }
 
 .chat-list-container-top {

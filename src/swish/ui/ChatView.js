@@ -1,11 +1,48 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import ChatItem from "./ChatItem";
 import "../assets/css/ChatView.css";
 
-function ChatView({ currentRecipient }) {
+function ChatView({ currentRecipient, sendMessage }) {
 
-  function processChatHistory(currentRecipient) {
-    return !currentRecipient || currentRecipient.sort((a, b) => (Number(a.timestamp) - Number(b.timestamp)));
+  const [messageText, setMessageText] = useState("");
+  const [hiddenMessage, setHiddenMessage] = useState(false);
+  const [messageList, setMessageList] = useState([]);
+
+  function processChatHistory(history) {
+    if(!Array.isArray(history)) return [];
+    return [...history].sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+  }
+
+  useEffect(() => {
+    if (Array.isArray(currentRecipient.history)) {
+      setMessageList(processChatHistory(currentRecipient.history));
+    }
+  }, [currentRecipient]);
+
+  async function addMessage() {
+    let message = {
+      "message": messageText,
+      "recipient": currentRecipient.recipient,
+      "timestamp": Date.now(),
+      "direction": "self"
+    };
+
+    const response = await sendMessage(message);
+
+    if (response) {
+      // In case, the hidden message is visible.
+      showHiddenMessage(false);
+
+      // Clear the input form for the next message.
+      setMessageText("");
+      setMessageList(prev => [...prev, message]);
+    } else {
+      showHiddenMessage(true);
+    }
+  }
+
+  function showHiddenMessage(value) {
+    setHiddenMessage(value);
   }
 
   return (
@@ -36,21 +73,30 @@ function ChatView({ currentRecipient }) {
       <div className="chat-view-container-middle">
         <div className="chat-container">
           {
-            processChatHistory(currentRecipient.history).map((message, index) =>
+            processChatHistory(messageList).map((message, index) =>
               <ChatItem key={index} messageInfo={message} />)
           }
-
         </div>
       </div>
       
       {/* To hold the message input area. */}
       <div className="chat-view-container-bottom">
-        <form className="chat-input-form-container" action="">
-          <input className="chat-input" placeholder="What do you have in mind?" />
-          <div className="chat-send-button-container">
+        <form className="chat-input-form-container">
+          <input
+            className="chat-input"
+            placeholder="What do you have in mind?"
+            value={messageText}
+            onChange={(e) => setMessageText(e.target.value)}
+          />
+          <div className="chat-send-button-container" onClick={addMessage}>
             <img className="chat-send-button-image chat-view-default-icon-sizing" src="./public/images/send.png" />
           </div>
         </form>
+
+        {/* To show error messages. */}
+        {hiddenMessage ? <div className="chat-input-container-bottom-error-box">
+          <p className="chat-input-container-bottom-error-box-message">Error Sending Message!</p>
+        </div> : null}
       </div>
     </div>
     
