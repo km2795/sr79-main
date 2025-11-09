@@ -44,12 +44,14 @@ router.post('/user', async (req, res) => {
         "password": userData.password,
         "chatHistory": []
       };
+      ChatHandler.CHAT_INDEX[userData.id] = {};
 
       await UserHandler.updateUserIndexFile();
+      await ChatHandler.updateChatIndexFile(null);
       res.json({ status: true });
     }
-  } catch (error) {
-    console.error('Error handling user:', error);
+  } catch (err) {
+    console.error('Error handling user:', err);
     res.status(400).json({status: false});
   }
 });
@@ -57,10 +59,20 @@ router.post('/user', async (req, res) => {
 router.post("/user/chat", async (req, res) => {
   try {
     const userData = req.body.body;
+    if (authenticateCredentials(userData.id, userData.password)) {
+      await ChatHandler.updateChatIndexFile(userData);
+      res.status(200).json({status: true});
+    } else {
+      res.status(400).json({status: false});
+    }
   } catch (err) {
     console.log(`Error Handling Chat Session: ${err.message}`);
     res.status(400).json({status: false});
   }
 })
+
+function authenticateCredentials(id, password) {
+  return (id in UserHandler.USER_INDEX && password === UserHandler.USER_INDEX[id].password);
+}
 
 export { router };
