@@ -58,13 +58,23 @@ function ChatView({ screenChange, currentRecipient, sendMessage }) {
 
           {/* Back navigation button. */}
           <div className="chat-view-back-navigation" onClick={handleBackNavigation}>
-            <img className="chat-view-back-navigation-icon chat-view-default-icon-sizing" src="./public/images/left_black.svg" />
+            <img
+              alt="Previous Page"
+              className="chat-view-back-navigation-icon chat-view-default-icon-sizing"
+              src="./public/images/left_black.svg"
+            />
+
           </div>
 
           {/* User's profile info. */}
           <div className="chat-view-user-profile">
             {/* User's profit photo. */}
-            <img className="chat-view-user-profile-photo-icon chat-view-default-icon-sizing" src="./public/images/user_black.svg" />
+            <img
+              alt="Profile Photo"
+              className="chat-view-user-profile-photo-icon chat-view-default-icon-sizing"
+              src="./public/images/user_black.svg"
+            />
+
             {/* Username is displayed here. */}
             <p className="chat-view-banner-username">{currentRecipient.recipient}</p>
           </div>
@@ -72,7 +82,12 @@ function ChatView({ screenChange, currentRecipient, sendMessage }) {
 
           {/* Action menus. */}
           <div className="chat-view-banner-action-menu">
-            <img className="chat-view-banner-action-menu-icon chat-view-default-icon-sizing" src="./public/images/dot-menu_black.svg" />
+            <img
+              alt="More Options"
+              className="chat-view-banner-action-menu-icon chat-view-default-icon-sizing"
+              src="./public/images/dot-menu_black.svg"
+            />
+
           </div>
 
         </div>
@@ -98,7 +113,12 @@ function ChatView({ screenChange, currentRecipient, sendMessage }) {
             onChange={(e) => setMessageText(e.target.value)}
           />
           <div className="chat-send-button-container" onClick={addMessage}>
-            <img className="chat-send-button-image chat-view-default-icon-sizing" src="./public/images/send_black.svg" />
+            <img
+              alt="Send Message"
+              className="chat-send-button-image chat-view-default-icon-sizing"
+              src="./public/images/send_black.svg"
+            />
+
           </div>
         </form>
 

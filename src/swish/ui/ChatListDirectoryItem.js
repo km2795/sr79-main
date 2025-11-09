@@ -19,7 +19,7 @@ function ChatListDirectoryItem({ recipient, chatInfo, screenChange, updateCurren
 
   return (
     <div className="chat-list-directory-item" onClick={
-      (e) => {
+      () => {
         screenChange(4);
         updateCurrentRecipient(recipientInfo);
       }

@@ -37,14 +37,22 @@ function Signin({screenChange, checkUser}) {
       <div className="signin-container-top">
         <div className="signin-container-top-navigation">
           <div className="welcome-screen-top-navigation-goback" onClick={handleBackNavigation}>
-            <img className="app-default-navigation-button-welcome-screen" src="./public/images/left_black.svg" />
+            <img
+                alt="Previous Page"
+                className="app-default-navigation-button-welcome-screen"
+                src="./public/images/left_black.svg"
+            />
           </div>
         </div>
         <div className="signin-container-top-banner welcome-screen-header-side-banner">
           <h2>Sign In</h2>
         </div>
         <div className="welcome-screen-top-navigation-gofront" onClick={handleFrontNavigation}>
-          <img className="app-default-navigation-button-welcome-screen" src="./public/images/right_black.svg" />
+          <img
+              alt="Next Page"
+              className="app-default-navigation-button-welcome-screen"
+              src="./public/images/right_black.svg"
+          />
         </div>
       </div>
       <div className="signin-container-middle">

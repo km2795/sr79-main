@@ -40,7 +40,12 @@ function ChatList({ userName, chatHistory, screenChange, updateCurrentRecipient 
           {/* User's profile info. */}
           <div className="chat-list-user-profile">
             {/* User's profile photo. */}
-            <img className="chat-list-user-profile-photo-icon chat-view-default-icon-sizing" src="./public/images/user_black.svg" />
+            <img
+                alt="Profile Photo"
+                className="chat-list-user-profile-photo-icon chat-view-default-icon-sizing"
+                src="./public/images/user_black.svg"
+            />
+
             {/* Username is displayed here. */}
             <p className="chat-list-banner-username">{userName}</p>
           </div>
@@ -48,7 +53,11 @@ function ChatList({ userName, chatHistory, screenChange, updateCurrentRecipient 
 
           {/* Action menus. */}
           <div className="chat-list-banner-action-menu">
-            <img className="chat-list-banner-action-menu-icon chat-list-default-icon-sizing" src="./public/images/dot-menu_black.svg" />
+            <img
+              alt="More Options"
+              className="chat-list-banner-action-menu-icon chat-list-default-icon-sizing"
+              src="./public/images/dot-menu_black.svg"
+            />
           </div>
 
         </div>
@@ -78,8 +87,12 @@ function ChatList({ userName, chatHistory, screenChange, updateCurrentRecipient 
       </div>
 
       <div className="chat-list-container-bottom">
-        <div className="chat-list-add-recipient-button-container" onClick={(e) => updateAddRecipientDialogVisibility(true)}>
-          <img className="chat-list-add-recipient-button chat-list-default-icon-sizing" src="./public/images/new-message.svg" />
+        <div className="chat-list-add-recipient-button-container" onClick={() => updateAddRecipientDialogVisibility(true)}>
+          <img
+            alt="New Recipient"
+            className="chat-list-add-recipient-button chat-list-default-icon-sizing"
+            src="./public/images/new-message.svg"
+          />
           New Conversation
         </div>
       </div>
