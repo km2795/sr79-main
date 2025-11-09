@@ -1,8 +1,9 @@
 const path = require('path');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'src', 'swish', 'index.js'),
+  entry: path.resolve(__dirname, 'src', 'swish', 'ui', 'index.js'),
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, "src", 'dist'),
@@ -23,6 +24,10 @@ module.exports = {
     ]
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, "src", "swish", "public", "index.html"),
+      filename: "index.html"
+    }),
     // copy static files (index.html, raw assets that are not imported)
     new CopyWebpackPlugin({
       patterns: [

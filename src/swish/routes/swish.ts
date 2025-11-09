@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Serve Swish index
 router.get('/', (req, res) => {
-  res.sendFile('index.html', { root: './src/swish' });
+  res.sendFile('index.html', { root: './src/swish/dist/' });
 });
 
 // Handle user operations
