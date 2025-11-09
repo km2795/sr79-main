@@ -11,8 +11,16 @@ function App() {
   /* Which screen is displayed currently. */
   const [screenIndex, setScreenIndex] = useState(0);
   const [userName, setUserName] = useState("");
+
+  /* Complete chat history of the user. */
   const [chatHistory, setChatHistory] = useState([]);
+
+  /* Current recipient. */
   const [currentRecipient, setCurrentRecipient] = useState("");
+
+  /* For concurrent chat send/reception. Will be replaced by temporary auth tokens. */
+  const [authCredentials, setAuthCredentials] = useState({id: "", password: ""});
+
 
   /*
    * Screen Component to be displayed.
@@ -23,8 +31,8 @@ function App() {
 
   const userProps = {
     ...useNavigationProps(setScreenIndex),
-    ...useUserAuthProps(setUserName, setChatHistory),
-    ...useChatProps(setCurrentRecipient),
+    ...useUserAuthProps(setUserName, setChatHistory, setAuthCredentials),
+    ...useChatProps(authCredentials, setCurrentRecipient),
     userName,
     chatHistory,
     currentRecipient
