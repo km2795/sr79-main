@@ -109,7 +109,6 @@ const Utility = {
    */
   modifyDateField (dateStr, full) {
     let messageDate;
-    console.log(dateStr);
     const date = new Date(dateStr) || new Date();
 
     if (full) {
@@ -118,7 +117,6 @@ const Utility = {
       temp = date.toTimeString().split(":");
       messageDate += `${temp[0]}:${temp[1]}`
     } else {
-      console.log(date);
       // If the date matches today's date, show the hours and minutes.
       if (date.toLocaleDateString() === new Date().toLocaleDateString()) {
         const temp = date.toTimeString().split(":");
