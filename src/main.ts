@@ -5,11 +5,11 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import { initSwish } from "./swish/index.ts"
 import { router as swishRouter } from './swish/routes/swish.ts';
-import * as UserHandler from './swish/handlers/UserHandler.ts';
-import * as ChatHandler from "./swish/handlers/ChatHandler.ts";
 
-// Configuration
+
+// Local app configurations.
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,7 +18,7 @@ const port = process.env["PORT"] || 2795;
 const app = express();
 
 /**
- * Middleware setup.
+ * Global middlewares.
  */
 app.use(helmet());
 app.use(cors());
@@ -29,10 +29,9 @@ app.use(rateLimit({windowMs: 15 * 60 * 1000, max: 1000}));
  * Static Files router.
  */
 app.use('/swish', express.static(path.join(__dirname, 'dist')));
-// app.use('/swish', express.static(path.join(__dirname, 'public')));
 
 /**
- * 'swish' service router.
+ * Swish service handler.
  */
 app.use('/swish', swishRouter);
 
@@ -61,8 +60,8 @@ app.use((_req, res) => {
 // Start server
 async function startServer() {
   try {
-    await UserHandler.checkDirectoryConfig();
-    await ChatHandler.checkChatIndexFile();
+    // Initialize the swish's initial service.
+    await initSwish();
 
     app.listen(port, () => {
       console.log(`Channel SR79 Active; Port: ${port}`);
