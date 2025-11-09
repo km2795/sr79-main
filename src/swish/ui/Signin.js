@@ -34,7 +34,7 @@ function Signin({screenChange, checkUser}) {
 
   return (
     <div className="signin-container app-default-box-welcome-screen">
-      <div className="welcome-screen-container-top">
+      <div className="signin-container-top">
         <div className="signin-container-top-navigation">
           <div className="welcome-screen-top-navigation-goback" onClick={handleBackNavigation}>
             <img className="app-default-navigation-button-welcome-screen" src="./public/images/left.png" />
@@ -65,8 +65,8 @@ function Signin({screenChange, checkUser}) {
         {hiddenMessage.length > 0 ? <div className="signin-input hidden-message"><p>{hiddenMessage}</p></div>: ""}
       </div>
       <div className="signin-container-bottom">
-        <div className="move-forward-icon-container" onClick={handleSignIn}>
-          <img className="move-forward-icon app-default-navigation-button-welcome-screen" src="./public/images/forward.png" />
+        <div className="signin-container-bottom-button" onClick={handleSignIn}>
+          Submit
         </div>
       </div>
     </div>
