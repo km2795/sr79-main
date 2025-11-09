@@ -1,22 +1,16 @@
 .chat-list-container {
-  text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 2px !important;
-  box-shadow: 2px 1px 20px 0 rgba(0, 0, 0, 0.1);
-  font-size: 14px !important;
-  margin: auto;
-
-  /* To keep the children centered. Using Grid Layout. */
-  display: grid;
-  /* justify-content: center; */
-  align-items: center;
-  align-content: baseline;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(to bottom right, #4f46e5, #ec4899);
+  color: white;
 }
 
 .chat-list-container-top {
   display: flex;
-  padding: 10px;
-  box-shadow: 2px 1px 20px 0 rgba(0, 0, 0, 0.1);
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
 }
 
 .chat-list-container-top-banner {
@@ -59,17 +53,22 @@
   height: 3rem;
 }
 
-.chat-list-container-middle {
-  background-color: #ffffff;
-  position: relative;
-}
-
-/* Push the contents (add recipient button) to the right. */
-.chat-list-add-recipient-button-container {
-  text-align: right;
+.chat-list-container-bottom {
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Maintain visual padding between button and container boundary. */
-.chat-list-add-recipient-button {
-  margin: 0 30px 30px 0;
+.chat-list-add-recipient-button-container {
+  background-color: #6b46c1;
+  padding: 10px 0;
+  border: none;
+  border-radius: 24px;
+  color: white;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
 }

@@ -1,7 +1,8 @@
 import React, {useState} from "react";
-import ChatListDirectory from "./ChatListDirectory";
 import AddRecipientDialog from "./AddRecipientDialog";
+import ChatListDirectoryItem from "./ChatListDirectoryItem";
 import "../assets/css/ChatList.css"
+import "../assets/css/ChatListDirectoryItem.css";
 
 function ChatList({ userName, chatHistory, screenChange, updateCurrentRecipient }) {
 
@@ -56,17 +57,22 @@ function ChatList({ userName, chatHistory, screenChange, updateCurrentRecipient 
 
 
         <div className="chat-list-container-middle">
-          <div className="chat-list-directory">
+          <div className="chat-list-directory-items">
             {
               chatHistory.length < 1
-                  ? <div className="chat-list-directory-empty-banner">It's so quiet in here!</div>
-                  : <ChatListDirectory
-                      chatHistory={chatHistory}
+                ? <div className="chat-list-directory-empty-banner">It's so quiet in here!</div>
+                : Object.keys(chatHistory).map((chatKey, index) =>
+                    <ChatListDirectoryItem
+                      key={index}
+                      recipient={chatKey}
+                      chatInfo={chatHistory[chatKey]}
                       screenChange={screenChange}
                       updateCurrentRecipient={updateCurrentRecipient}
                     />
+                  )
             }
           </div>
+
           {showAddRecipientDialog ? <AddRecipientDialog
             onAccept={(recipient) => setCurrentRecipient(recipient)}
             onClose={() => updateAddRecipientDialogVisibility(false)} /> : null}
@@ -75,6 +81,7 @@ function ChatList({ userName, chatHistory, screenChange, updateCurrentRecipient 
         <div className="chat-list-container-bottom">
           <div className="chat-list-add-recipient-button-container" onClick={(e) => updateAddRecipientDialogVisibility(true)}>
             <img className="chat-list-add-recipient-button chat-list-default-icon-sizing" src="./public/images/new-message.png" />
+            New Conversation
           </div>
         </div>
       </div>
