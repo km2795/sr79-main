@@ -6,12 +6,10 @@
   "author": "Kunal Sharma",
   "main": "main.ts",
   "scripts": {
-    "build:main": "tsc",
-    "build:swish": "webpack --config webpack.config.js --mode development --watch",
-    "build": "tsc && npm run build:swish",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/main.ts",
-    "start": "npm run build && node src/main.js",
-    "prod": "NODE_ENV=production npm run build:prod && node dist/main.js"
+    "start": "ts-node src/main.ts",
+    "build:swish": "webpack --config webpack.config.js --mode production",
+    "build:prod": "NODE_ENV=production npm run build:swish && ts-node src/main.ts"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.28.5",
