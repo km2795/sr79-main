@@ -1,14 +1,27 @@
-/* Base container with gradient background */
+@media (min-width: 480px) {
+  .chat-list-container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .chat-list-container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .chat-list-container {
+    max-width: 720px;
+  }
+}
 .chat-list-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   height: 100vh;
-  background: linear-gradient(to bottom right, #4f46e5, #ec4899);
-  font-family: 'Poppins', sans-serif;
-  color: white;
-  overflow: hidden;
-  position: relative;
-  z-index: 0;
+  padding: 0 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Top banner section */
@@ -51,14 +64,13 @@
 /* Middle scrollable chat list */
 .chat-list-container-middle {
   flex: 1 1 auto;
-  overflow-y: auto;
-  padding: 8px 16px;
 }
 
 .chat-list-directory-container {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
 .chat-list-directory-empty-banner {
@@ -72,7 +84,6 @@
 .chat-list-container-bottom {
   flex: 0 0 auto;
   padding: 16px;
-  background-color: rgba(0, 0, 0, 0.1);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
