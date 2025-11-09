@@ -7,10 +7,11 @@ function ChatListDirectory({ chatHistory, screenChange, updateCurrentRecipient }
       <div className="chat-list-directory-container">
         <div className="chat-list-directory-items">
           {
-            chatHistory.map((chat, index) =>
+            Object.keys(chatHistory).map((chatKey, index) =>
               <ChatListDirectoryItem
                   key={index}
-                  chat={chat}
+                  recipient={chatKey}
+                  chatInfo={chatHistory[chatKey]}
                   screenChange={screenChange}
                   updateCurrentRecipient={updateCurrentRecipient}
               />

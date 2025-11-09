@@ -3,7 +3,10 @@ import ChatListDirectory from "./ChatListDirectory";
 import AddRecipientDialog from "./AddRecipientDialog";
 import "../assets/css/ChatList.css"
 
-function ChatList({userName, chatHistory, screenChange, updateCurrentRecipient}) {
+function ChatList({ userName, chatHistory, screenChange, updateCurrentRecipient }) {
+
+  /* If history is undefined or null, pass an empty list (at least). */
+  chatHistory = chatHistory ? chatHistory : [];
 
   /*
    * To show/hide the add recipient dialog box.
@@ -15,6 +18,17 @@ function ChatList({userName, chatHistory, screenChange, updateCurrentRecipient})
    */
   function updateAddRecipientDialogVisibility(state) {
     setShowAddRecipientDialog(state);
+  }
+
+  function setCurrentRecipient(recipient) {
+    updateCurrentRecipient({
+      recipient: recipient,
+      preview: "",
+      timestamp: "",
+      history: []
+    });
+    screenChange(4);
+    updateAddRecipientDialogVisibility(false);
   }
 
   return (
@@ -54,7 +68,7 @@ function ChatList({userName, chatHistory, screenChange, updateCurrentRecipient})
             }
           </div>
           {showAddRecipientDialog ? <AddRecipientDialog
-            onAccept={(e) => console.log(e)}
+            onAccept={(recipient) => setCurrentRecipient(recipient)}
             onClose={() => updateAddRecipientDialogVisibility(false)} /> : null}
         </div>
 
