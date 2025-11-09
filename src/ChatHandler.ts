@@ -47,8 +47,6 @@ export async function createChatIndexFile() {
  */
 export async function updateChatIndexFile(chat) {
   try {
-    console.log(CHAT_INDEX);
-    console.log(chat);
     if (chat) {
       if (chat.recipient in CHAT_INDEX[chat.id]) {
         CHAT_INDEX[chat.id][chat.recipient]["preview"] = chat.message;
