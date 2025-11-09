@@ -26,7 +26,10 @@ module.exports = {
     // copy static files (index.html, raw assets that are not imported)
     new CopyWebpackPlugin({
       patterns: [
-        { from: path.resolve(__dirname, 'src', 'public', 'images'), to: path.join(__dirname, "src", "dist", "public", "images") }
+        {
+          from: path.resolve(__dirname, 'src', 'swish', 'public', 'images'),
+          to: path.join(__dirname, "src", "dist", "public", "images")
+        }
       ]
     })
   ],
