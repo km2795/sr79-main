@@ -45,11 +45,55 @@ export async function createChatIndexFile() {
 /**
  * Updates the storage with the recent Chat data.
  */
-export async function updateChatIndexFile(chatIndex) {
+export async function updateChatIndexFile(chat) {
   try {
+    console.log(CHAT_INDEX);
+    console.log(chat);
+    if (chat) {
+      if (chat.recipient in CHAT_INDEX[chat.id]) {
+        CHAT_INDEX[chat.id][chat.recipient]["preview"] = chat.message;
+        CHAT_INDEX[chat.id][chat.recipient]["timestamp"] = chat.timestamp;
+        CHAT_INDEX[chat.id][chat.recipient]["history"].push({
+          "direction": "self",
+          "timestamp": chat.timestamp,
+          "message": chat.message
+        });
+      } else {
+        CHAT_INDEX[chat.id][chat.recipient] = {
+          "preview": chat.message,
+          "timestamp": chat.timestamp,
+          "history": [{
+            "direction": "self",
+            "timestamp": chat.timestamp,
+            "message": chat.message
+          }]
+        }
+      }
+
+      if (chat.id in CHAT_INDEX[chat.recipient]) {
+        CHAT_INDEX[chat.recipient][chat.id]["preview"] = chat.message;
+        CHAT_INDEX[chat.recipient][chat.id]["timestamp"] = chat.timestamp;
+        CHAT_INDEX[chat.recipient][chat.id]["history"].push({
+          "direction": "recipient",
+          "timestamp": chat.timestamp,
+          "message": chat.message
+        });
+      } else {
+        CHAT_INDEX[chat.recipient][chat.id] = {
+          "preview": chat.message,
+          "timestamp": chat.timestamp,
+          "history": [{
+            "direction": "recipient",
+            "timestamp": chat.timestamp,
+            "message": chat.message
+          }]
+        }
+      }
+    }
+
     await fs.writeFile(CHAT_INDEX_FILE, JSON.stringify(CHAT_INDEX));
     console.log("\n---- CHAT INDEX Updated... ---- \n");
   } catch (err) {
-    console.log(`Internal error occurred: ${err.message})`);
+    console.log(`Error Updating Chat Index: ${err.message}`);
   }
 }
