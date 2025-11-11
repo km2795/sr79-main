@@ -5,8 +5,8 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { initSwish } from "./swish/index.ts"
-import { router as swishRouter } from './swish/routes/swish.ts';
+import { initSwish } from "./swish/server/index"
+import { router as swishRouter } from './swish/server/routes/swish';
 
 
 // Local app configurations.
@@ -28,7 +28,7 @@ app.use(rateLimit({windowMs: 15 * 60 * 1000, max: 1000}));
 /**
  * Static Files router.
  */
-app.use('/swish', express.static(path.join(__dirname, 'dist')));
+app.use('/swish', express.static(path.join(__dirname, '/swish/dist')));
 
 /**
  * Swish service handler.

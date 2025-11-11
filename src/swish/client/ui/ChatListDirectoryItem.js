@@ -1,5 +1,5 @@
 import React from "react";
-import Utility from "../Utility";
+import Utility from "../../utils/Utility";
 import "../assets/css/ChatListDirectoryItem.css";
 
 function ChatListDirectoryItem({ recipient, chatInfo, screenChange, updateCurrentRecipient }) {

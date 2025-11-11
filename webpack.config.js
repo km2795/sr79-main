@@ -1,12 +1,15 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const nodeExternals = require("webpack-node-externals");
 
-module.exports = {
-  entry: path.resolve(__dirname, 'src', 'swish', 'ui', 'index.js'),
+// --- 1. Client Configuration ---
+const clientConfig = {
+  mode: 'production',
+  entry: path.resolve(__dirname, 'src', 'swish', "client", 'ui', 'index.js'),
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, "src", 'dist'),
+    path: path.resolve(__dirname, "src", "swish", "dist"),
     publicPath: '/swish/' // <-- critical: emitted asset URLs will be prefixed with /swish/
   },
   devtool: "source-map",
@@ -25,18 +28,44 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "swish", "public", "index.html"),
+      template: path.join(__dirname, "src", "swish", "client", "public", "index.html"),
       filename: "index.html"
     }),
     // copy static files (index.html, raw assets that are not imported)
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: path.resolve(__dirname, 'src', 'swish', 'public', 'images'),
-          to: path.join(__dirname, "src", "dist", "public", "images")
+          from: path.resolve(__dirname, 'src', 'swish', "client", 'public', 'images'),
+          to: path.join(__dirname, "src", "swish", "dist", "public", "images")
         }
       ]
     })
-  ],
-  mode: 'production'
-};
+  ]
+}
+
+// --- 2. Server Configuration ---
+const serverConfig = {
+  mode: "production",
+  entry: "./src/main.ts",
+  output: {
+    path: path.resolve(__dirname, "build"),
+    filename: "main.js"
+  },
+  target: "node",
+  externals: [nodeExternals()], // Exclude node_modules from the bundle.
+  module: {
+    rules: [
+      {
+        test: /\.(ts|js)$/,
+        exclude: /node_modules/,
+        use: 'ts-loader',
+      }
+    ]
+  },
+  resolve: {
+    extensions: [".ts", ".js"]
+  },
+  devtool: "source-map",
+}
+
+module.exports = [clientConfig, serverConfig];

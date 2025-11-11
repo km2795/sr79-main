@@ -1,11 +1,11 @@
 import express from 'express';
-import * as ChatHandler from "../handlers/ChatHandler.ts";
-import * as UserHandler from "../handlers/UserHandler.ts";
+import * as ChatHandler from "../handlers/ChatHandler";
+import * as UserHandler from "../handlers/UserHandler";
 
 const router = express.Router();
 
 // Serve Swish index
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
   res.sendFile('index.html', { root: './src/swish/dist/' });
 });
 
@@ -13,11 +13,17 @@ router.get('/', (req, res) => {
 router.post('/user', async (req, res) => {
   try {
     const userData = req.body.body;
+  
+    // user id received with request from client.
+    const reqUserId = userData.id;
 
-    if (userData.id in UserHandler.USER_INDEX) {
+    // user id stored in the index at the server.
+    const UserId = UserHandler.USER_INDEX[userData.id]
+
+    if (reqUserId && UserId && userData.id in UserHandler.USER_INDEX) {
       // If password field exists in the payload, then check for authenticity.
       if ("password" in userData) {
-        if (UserHandler.USER_INDEX[userData.id]["password"] === userData.password) {
+        if (UserId["password"] === userData.password) {
           res.json({
             status: true,
             message: "User Authenticated.",
@@ -41,8 +47,7 @@ router.post('/user', async (req, res) => {
     } else {
       // Enter new user details.
       UserHandler.USER_INDEX[userData.id] = {
-        "password": userData.password,
-        "chatHistory": []
+        "password": userData.password
       };
       ChatHandler.CHAT_INDEX[userData.id] = {};
 
@@ -50,8 +55,8 @@ router.post('/user', async (req, res) => {
       await ChatHandler.updateChatIndexFile(null);
       res.json({ status: true });
     }
-  } catch (err) {
-    console.error('Error handling user:', err);
+  } catch (err: any) {
+    console.error('Error handling user:', err.message);
     res.status(400).json({status: false});
   }
 });
@@ -65,14 +70,21 @@ router.post("/user/chat", async (req, res) => {
     } else {
       res.status(400).json({status: false});
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log(`Error Handling Chat Session: ${err.message}`);
     res.status(400).json({status: false});
   }
 })
 
-function authenticateCredentials(id, password) {
-  return (id in UserHandler.USER_INDEX && password === UserHandler.USER_INDEX[id].password);
+function authenticateCredentials(id: string, password: string) {
+  if (!id || !password) return false;
+
+  const userId = UserHandler.USER_INDEX[id];
+  
+  if (userId) {
+    return (id in UserHandler.USER_INDEX && password === userId.password)
+  } else 
+    return false;
 }
 
 export { router };
