@@ -1,8 +1,50 @@
+import http from "http";
+import { Server } from "socket.io";
 import express from 'express';
 import * as ChatHandler from "../handlers/ChatHandler";
 import * as UserHandler from "../handlers/UserHandler";
 
 const router = express.Router();
+
+let socketIo: Server | null = null;
+
+export async function initSwish(server: http.Server) {
+  socketIo = new Server(server, { 
+    path: "/swish/user/chat/",
+    cors: { origin: "*" }
+  });
+  
+  socketIo.on("connection", (socket) => {
+    console.log(`Socket connected: ${socket.id}`);
+    
+    socket.on("join", (userId: string) => {
+      if (!userId) return;
+      socket.join(userId);
+      socket.emit("joined", { userId });
+    });
+    
+    socket.on("chat:message", async (payload: any) => {
+      try {
+        if (authenticateCredentials(payload.id, payload.password)) {
+          await ChatHandler.updateChatIndexFile(payload);
+          if (socketIo) {
+            // socketIo.to(payload.id).emit("chat:message", payload);
+
+            // Broadcast to recipient.
+            socketIo.to(payload.recipient).emit("chat:message", payload);
+          }
+        } else {
+          ;
+        }
+      } catch (err: any) {
+        console.log(`Error Handling Chat Session: ${err.message}`);
+      }
+    });
+  });
+  
+  await UserHandler.checkDirectoryConfig();
+  await ChatHandler.checkChatIndexFile();
+}
 
 // Serve Swish index
 router.get('/', (_req, res) => {

@@ -1,3 +1,4 @@
+import http from "http";
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -5,8 +6,7 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { initSwish } from "./swish/server/index"
-import { router as swishRouter } from './swish/server/routes/swish';
+import { router as swishRouter, initSwish } from './swish/server/routes/swish';
 
 
 // Local app configurations.
@@ -60,10 +60,12 @@ app.use((_req, res) => {
 // Start server
 async function startServer() {
   try {
-    // Initialize the swish's initial service.
-    await initSwish();
+    const server = http.createServer(app);
 
-    app.listen(port, () => {
+    // Initialize the swish's initial service.
+    await initSwish(server);
+
+    server.listen(port, () => {
       console.log(`Channel SR79 Active; Port: ${port}`);
     });
   } catch (error) {

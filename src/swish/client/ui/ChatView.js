@@ -1,8 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ChatItem from "./ChatItem";
 import "../assets/css/ChatView.css";
+import axios from "axios";
+import { io } from "socket.io-client";
 
-function ChatView({ screenChange, currentRecipient, sendMessage }) {
+function ChatView({ 
+  screenChange,
+  currentRecipient,
+  authCredentials,
+  updateCurrentRecipient
+}) {
 
   const [messageText, setMessageText] = useState("");
   const [hiddenMessage, setHiddenMessage] = useState(false);
@@ -12,32 +19,91 @@ function ChatView({ screenChange, currentRecipient, sendMessage }) {
     if(!Array.isArray(history)) return [];
     return [...history].sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
   }
+  
+  const socketRef = useRef(null);
 
   useEffect(() => {
     if (Array.isArray(currentRecipient.history)) {
       setMessageList(processChatHistory(currentRecipient.history));
     }
   }, [currentRecipient]);
+  
+  useEffect(() => {
+    // connect to same path as server
+    const socket = io(window.location.origin, {
+      path: "/swish/user/chat",
+      transports: ["websocket", "polling"]
+    });
+    socketRef.current = socket;
 
-  async function addMessage() {
+    // join once
+    socket.emit("join", authCredentials.id);
+
+    // handler
+    const onMessage = (message) => updateChatViewWithNewMessage(message);
+    socket.on("chat:message", onMessage);
+
+    return () => {
+      socket.off("chat:message", onMessage);
+      socket.disconnect();
+      socketRef.current = null;
+    };
+    // only run on mount / authCredentials.id change
+  }, [authCredentials.id]);
+
+  /**
+   * To cache the message in the list, by checking its 
+   * timestamp. To properly arrange it in the list.
+   */
+  function updateChatViewWithNewMessage(message) {
+    setMessageList(prev => {
+      const list = Array.isArray(prev) ? [...prev] : [];
+      if (list.length === 0) {
+        currentRecipient.history = [message];  
+        return [message];  
+      } else {
+        // Check the last message
+        const lastMessageTimestamp = list[list.length -1]?.timestamp ?? -Infinity;
+        
+        // If the new message has timestamp greater or equal
+        // to the last message concat it to the list.
+        if (lastMessageTimestamp <= message.timestamp) {
+          currentRecipient.history = [...list, message];
+          return [...list, message];
+      
+        // Since the message is older than the last message in the 
+        // list, sort the list and update the view accordingly.
+        } else {
+          currentRecipient.history = processChatHistory(list);
+          return processChatHistory(list);
+        }
+      }
+    });
+  }
+
+  /**
+   * To send new message to the server.
+   */
+  async function sendMessage() {
+
+    // Message to send to the server.
     let message = {
+      "id": authCredentials.id,
+      "password": authCredentials.password,
       "message": messageText,
       "recipient": currentRecipient.recipient,
       "timestamp": Date.now(),
       "direction": "self"
     };
 
-    const response = await sendMessage(message);
-
-    if (response) {
-      // In case, the hidden message is visible.
-      showHiddenMessage(false);
-
-      // Clear the input form for the next message.
+    try {
+      socketRef.current?.emit("chat:message", message);
       setMessageText("");
       setMessageList(prev => [...prev, message]);
-    } else {
-      showHiddenMessage(true);
+
+    } catch (err) {
+      console.log(`Error sending message: ${err.message}`);
+      return false;
     }
   }
 
@@ -112,7 +178,7 @@ function ChatView({ screenChange, currentRecipient, sendMessage }) {
             value={messageText}
             onChange={(e) => setMessageText(e.target.value)}
           />
-          <div className="chat-send-button-container" onClick={addMessage}>
+          <div className="chat-send-button-container" onClick={sendMessage}>
             <img
               alt="Send Message"
               className="chat-send-button-image chat-view-default-icon-sizing"

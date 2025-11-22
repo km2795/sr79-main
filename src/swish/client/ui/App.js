@@ -32,10 +32,11 @@ function App() {
   const userProps = {
     ...useNavigationProps(setScreenIndex),
     ...useUserAuthProps(setUserName, setChatHistory, setAuthCredentials),
-    ...useChatProps(authCredentials, setCurrentRecipient),
+    ...useChatProps(setCurrentRecipient),
     userName,
     chatHistory,
-    currentRecipient
+    currentRecipient,
+    authCredentials
   };
 
   return (
