@@ -7,8 +7,8 @@
   "main": "main.ts",
   "scripts": {
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/main.ts",
-    "build": "webpack",
-    "start": "node build/main.js"
+    "build": "webpack --watch",
+    "start": "nodemon build/main.js"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.28.5",
@@ -41,6 +41,7 @@
     "helmet": "^8.1.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   }
 }
