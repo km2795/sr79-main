@@ -3,6 +3,7 @@ import ScreenComponentIndex from "./ScreenComponentIndex";
 import useNavigationProps from "./hooks/navigation/useNavigationProps";
 import useUserAuthProps from "./hooks/auth/useUserAuthProps";
 import useChatProps from "./hooks/chat/useChatProps";
+import { SocketProvider } from "./socket/SocketProvider";
 import "../assets/css/main.css";
 
 
@@ -20,7 +21,6 @@ function App() {
 
   /* For concurrent chat send/reception. Will be replaced by temporary auth tokens. */
   const [authCredentials, setAuthCredentials] = useState({id: "", password: ""});
-
 
   /*
    * Screen Component to be displayed.
@@ -40,9 +40,11 @@ function App() {
   };
 
   return (
-    <div className="main">
-      <ScreenComponent { ...userProps } />
-    </div>
+    <SocketProvider>
+      <div className="main">
+        <ScreenComponent { ...userProps } />
+      </div>
+    </SocketProvider>
   );
 }
 
