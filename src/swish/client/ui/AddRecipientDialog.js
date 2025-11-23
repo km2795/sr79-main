@@ -1,7 +1,13 @@
 import React from "react";
 import '../assets/css/AddRecipientDialog.css';
 
-function AddRecipientDialog({ onAccept, onClose }) {
+function AddRecipientDialog({ 
+  onAccept, 
+  onClose,
+  recipientDialogMessage,
+  recipientDialogMessageVisible 
+}) {
+
   const [recipient, setRecipient] = React.useState("");
 
   return (
@@ -29,6 +35,14 @@ function AddRecipientDialog({ onAccept, onClose }) {
             <button className="add-recipient-dialog-actions-button close" onClick={onClose}>Close</button>
           </div>
         </div>
+        
+        {recipientDialogMessageVisible ? 
+        (<div className="add-recipient-dialog-container-message">
+          <div className="add-recipient-hidden-message">
+            <p>{recipientDialogMessage}</p>
+          </div>
+        </div>)
+        : null}
 
       </div>
     </div>

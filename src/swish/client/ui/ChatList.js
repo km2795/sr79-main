@@ -3,7 +3,13 @@ import AddRecipientDialog from "./AddRecipientDialog";
 import ChatListDirectoryItem from "./ChatListDirectoryItem";
 import "../assets/css/ChatList.css"
 
-function ChatList({ userName, chatHistory, screenChange, updateCurrentRecipient }) {
+function ChatList({ 
+  userName,
+  chatHistory,
+  screenChange,
+  updateCurrentRecipient,
+  checkRecipient
+}) {
 
   /* If history is undefined or null, pass an empty list (at least). */
   chatHistory = chatHistory ? chatHistory : [];
@@ -12,23 +18,48 @@ function ChatList({ userName, chatHistory, screenChange, updateCurrentRecipient 
    * To show/hide the add recipient dialog box.
    */
   const [showAddRecipientDialog, setShowAddRecipientDialog] = useState(false);
+  
+  /*
+   * Recipient Add dialog box's hidden message.
+   */
+  const [recipientDialogMessage, setRecipientDialogMessage] = useState("");
+  
+  /*
+   * Visibility of the add recipient dialog's message.
+   */
+  const [recipientDialogMessageVisible, setRecipientDialogMessageVisible] = useState(false);
 
   /*
    * To update the state of show/hide flag for add recipient dialog box.
    */
   function updateAddRecipientDialogVisibility(state) {
+    setRecipientDialogMessage("");
+    setRecipientDialogMessageVisible(false);
     setShowAddRecipientDialog(state);
   }
 
-  function setCurrentRecipient(recipient) {
-    updateCurrentRecipient({
-      recipient: recipient,
-      preview: "",
-      timestamp: "",
-      history: []
-    });
-    screenChange(4);
-    updateAddRecipientDialogVisibility(false);
+  async function setCurrentRecipient(recipient) {
+    const response = await checkRecipient(recipient);
+    if (response == null) {
+      // Show internal error occurred.
+      setRecipientDialogMessage("Internal Error Occurred. Try Again Later.");
+      setRecipientDialogMessageVisible(true);
+    } else if (response) {
+      setRecipientDialogMessage("");
+      setRecipientDialogMessageVisible(false);
+      updateCurrentRecipient({
+        recipient: recipient,
+        preview: "",
+        timestamp: "",
+        history: []
+      });
+      screenChange(4);
+      updateAddRecipientDialogVisibility(false);
+    } else {
+      // Show recipient not exists message.
+      setRecipientDialogMessage("Recipient Not Found.");
+      setRecipientDialogMessageVisible(true);
+    }
   }
 
   return (
@@ -83,7 +114,9 @@ function ChatList({ userName, chatHistory, screenChange, updateCurrentRecipient 
 
         {showAddRecipientDialog ? <AddRecipientDialog
           onAccept={(recipient) => setCurrentRecipient(recipient)}
-          onClose={() => updateAddRecipientDialogVisibility(false)} /> : null}
+          onClose={() => updateAddRecipientDialogVisibility(false)}
+          recipientDialogMessage={recipientDialogMessage}
+          recipientDialogMessageVisible={recipientDialogMessageVisible} /> : null}
       </div>
 
       <div className="chat-list-container-bottom">
