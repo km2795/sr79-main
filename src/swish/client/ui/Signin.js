@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import "../assets/css/common.css";
 import "../assets/css/Signin.css";
 
-function Signin({ screenChange, checkUser }) {
+function Signin({ 
+  screenChange,
+  checkUser
+}) {
+
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
   const [hiddenMessage, setHiddenMessage] = useState("");
