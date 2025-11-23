@@ -30,7 +30,11 @@ export async function initSwish(server: http.Server) {
           if (socketIo) {
             // socketIo.to(payload.id).emit("chat:message", payload);
 
-            // Broadcast to recipient.
+            // Update the direction of the message before sending to the 
+            // intended recipient.
+            payload.direction = "recipient";
+
+            // Relay to the intended recipient.
             socketIo.to(payload.recipient).emit("chat:message", payload);
           }
         } else {
