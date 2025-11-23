@@ -9,7 +9,7 @@ const SocketContext = createContext({
   setSocket: () => {}
 });
 
-export function SocketProvider({ children, auth }) {
+export function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
   
   // Initially 'null' would be provided, to avoid,

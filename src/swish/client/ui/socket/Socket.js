@@ -2,26 +2,29 @@ import { io } from "socket.io-client";
 
 // Socket object.
 let socket = null;
+let created = false;
 
 /**
  * Socket creation helper.
  */
 export function createSocket(auth) {
-  if (socket)
+  if (socket && socket.connected)
     return socket;
   
   socket = io(window.location.origin, {
     path: "/swish/user/chat",
-    transport: ["websocket", "polling"],
+    transports: ["websocket", "polling"],
     autoConnect: false,
     auth
   });
   
   socket.on("connect", () => console.log("socket connected", socket.id));
   socket.on("connect_error", (err) => console.error("socket connect_error", err));
+  created = true;
   
-  // Connect the socket.
-  socket.connect();
+  if (!socket.connected) {
+    socket.connect();
+  }
   
   return socket;
 }
@@ -42,4 +45,5 @@ export function disconnectSocket() {
   
   socket.disconnect();
   socket = null;
+  created = false;
 }
