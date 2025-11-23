@@ -9,6 +9,13 @@ const router = express.Router();
 
 let socketIo: Server | null = null;
 
+/*
+ * Serve Swish index
+ */
+router.get('/', (_req, res) => {
+  res.sendFile('index.html', { root: './src/swish/dist' });
+});
+
 /**
  * Initialize the Swish service router.
  */
@@ -20,40 +27,27 @@ export async function initSwish(server: http.Server) {
   await DirectoryHandler.loadDirectoryConfig();
   
   socketIo = new Server(server, {
-    path: "/swish/user/chat/",
+    path: "/swish/user/chat",
     cors: { origin: "*" }
   });
   
   // On receiving a connection.
   socketIo.on("connection", (socket) => {
     console.log(`Socket Connected: ${socket.id}`);
-    
-    socket.on("join", (userId: string) => {
-      if (!userId) return;
-
-      // Connect user.
-      socket.join(userId);
-
-      console.log(`User: ${userId} joined.`);
-
-      // Send confirmation to the user.
-      socket.emit("joined", { userId });
-    });
-    
+ 
+    /*
+     * User authentication event.
+     */
     socket.on("chat:user", async (payload: any) => {
       try {
-        const userData = payload.body;
-
-        // user id received with request from client.
+        const userData = payload;
         const reqUserId = userData.id;
-
-        // user id stored in the index at the server.
         const UserId = UserHandler.USER_INDEX[userData.id]
 
         if (reqUserId && UserId && userData.id in UserHandler.USER_INDEX) {
-          // If password field exists in the payload, then check for authenticity.
           if ("password" in userData) {
             if (UserId["password"] === userData.password) {
+              socket.join(reqUserId);
               socket.emit("chat:user", {
                 status: true,
                 message: "User Authenticated.",
@@ -65,10 +59,7 @@ export async function initSwish(server: http.Server) {
                   : []
               });
             } else {
-              socket.emit("chat:user", {
-                status: false,
-                message: "Invalid Credentials."
-              });
+              socket.emit("chat:user", { status: false, message: "Invalid Credentials." });
             }
           } else {
             // Return that the user exists, in case of normal user check.
@@ -76,21 +67,44 @@ export async function initSwish(server: http.Server) {
           }
         } else {
           // Enter new user details.
-          UserHandler.USER_INDEX[userData.id] = {
-            "password": userData.password
-          };
+          UserHandler.USER_INDEX[userData.id] = { "password": userData.password };
           ChatHandler.CHAT_INDEX[userData.id] = {};
 
           await UserHandler.updateUserIndexFile();
           await ChatHandler.updateChatIndexFile(null);
+
+          socket.join(reqUserId);
           socket.emit("chat:user", { status: true });
         }
       } catch (err: any) {
         console.error('Error handling user:', err.message);
         socket.emit("chat:user", {status: false});
       }
-    })
+    });
     
+    /*
+     * User exists check event.
+     */
+    socket.on("chat:checkUser", async (payload: any) => {
+      try {
+        if (payload.recipient in UserHandler.USER_INDEX) {
+          socket.emit("chat:checkUser", { status: true });
+        } else {
+          socket.emit("chat:checkUser", { status: false });
+        }
+      } catch (error: any) {
+        if (error instanceof Error) {
+          console.log(`[chat:checkUser] Error accessing USER_INDEX: ${error.message}`);          
+        } else {
+          console.log(`[chat:checkUser] Unknown error occurred: ${error}`);
+        }
+        socket.emit("chat:checkUser", { status: null });
+      }
+    });
+    
+    /* 
+     * Chat message receiving event.
+     */
     socket.on("chat:message", async (payload: any) => {
       try {
         if (authenticateCredentials(payload.id, payload.password)) {
@@ -113,11 +127,6 @@ export async function initSwish(server: http.Server) {
     });
   });
 }
-
-// Serve Swish index
-router.get('/', (_req, res) => {
-  res.sendFile('index.html', { root: './src/swish/dist/' });
-});
 
 function authenticateCredentials(id: string, password: string) {
   if (!id || !password) return false;
