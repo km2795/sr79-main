@@ -3,6 +3,8 @@ import { useSocket, useSetSocket } from "../../socket/SocketProvider";
 import { createSocket } from "../../socket/Socket";
 
 function useUserAuthProps(setUserName, setChatHistory, setAuthCredentials) {
+  const socketFromContext = useSocket();
+  const setSocket = useSetSocket();
 
   /**
    * Function to check if the user exists in the records or not.
@@ -27,10 +29,10 @@ function useUserAuthProps(setUserName, setChatHistory, setAuthCredentials) {
       };
 
       // ensure we have a socket; create if missing (sign-in/sign-up)
-      let socket = useSocket();
+      let socket = socketFromContext;
       if (!socket) {
         const s = createSocket({}); // pass auth if needed
-        useSetSocket(s);
+        setSocket(s);
         socket = s;
       }
 
