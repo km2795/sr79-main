@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
+import { io } from "socket.io-client";
+import { useSocket } from "./socket/SocketProvider";
 import ChatItem from "./ChatItem";
 import "../assets/css/ChatView.css";
-import axios from "axios";
-import { io } from "socket.io-client";
 
 function ChatView({ 
   screenChange,
   currentRecipient,
   authCredentials,
-  updateCurrentRecipient
 }) {
 
   const [messageText, setMessageText] = useState("");
@@ -20,37 +19,35 @@ function ChatView({
     return [...history].sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
   }
   
+  const socket = useSocket();
   const socketRef = useRef(null);
 
+  /*
+   * Set the messageList with the recipient's info.
+   */
   useEffect(() => {
     if (Array.isArray(currentRecipient.history)) {
       setMessageList(processChatHistory(currentRecipient.history));
     }
   }, [currentRecipient]);
   
+  /*
+   * To connect the user to the server.
+   */
   useEffect(() => {
-    // connect to same path as server
-    const socket = io(window.location.origin, {
-      path: "/swish/user/chat",
-      transports: ["websocket", "polling"]
-    });
-    socketRef.current = socket;
-
-    // join once
+    if (!socket || !authCredentials.id)
+      return;
+    
     socket.emit("join", authCredentials.id);
-
-    // handler
+    
     const onMessage = (message) => updateChatViewWithNewMessage(message);
     socket.on("chat:message", onMessage);
-
+    
     return () => {
       socket.off("chat:message", onMessage);
-      socket.disconnect();
-      socketRef.current = null;
-    };
-    // only run on mount / authCredentials.id change
-  }, [authCredentials.id]);
-
+    }
+  }, [socket, authCredentials.id]);
+  
   /**
    * To cache the message in the list, by checking its 
    * timestamp. To properly arrange it in the list.

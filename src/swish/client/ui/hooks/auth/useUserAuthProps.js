@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useSocket, useSetSocket } from "../../socket/SocketProvider";
+import { createSocket } from "../../socket/Socket";
 
 function useUserAuthProps(setUserName, setChatHistory, setAuthCredentials) {
 
@@ -16,29 +18,59 @@ function useUserAuthProps(setUserName, setChatHistory, setAuthCredentials) {
    */
   async function checkUser(userName, password, authType) {
     try {
-      const response = await axios.post("/swish/user/", {
+      const payload = {
         body: {
           "id": userName,
           "password": password,
           "authType": authType
         }
-      });
+      };
 
-      // Set the username, if the status is true.
-      if (response.data.status) {
-        setUserName(userName)
-        setChatHistory(response.data.chatHistory);
-        setAuthCredentials({id: userName, password: password});
+      // ensure we have a socket; create if missing (sign-in/sign-up)
+      let socket = useSocket();
+      if (!socket) {
+        const s = createSocket({}); // pass auth if needed
+        useSetSocket(s);
+        socket = s;
       }
 
-      return response.data.status;
+      // wait for server reply (one-time listener)
+      return await new Promise((resolve) => {
+        const onResponse = (response) => {
+          try {
+            if (response && response.status) {
+              setUserName(userName);
+              setChatHistory(response.chatHistory || []);
+              setAuthCredentials({ id: userName, password });
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          } catch (e) {
+            resolve(false);
+          }
+        };
+
+        // safety timeout
+        const timer = setTimeout(() => {
+          socket.off("chat:user", onResponse);
+          resolve(false);
+        }, 5000);
+
+        socket.once("chat:user", (resp) => {
+          clearTimeout(timer);
+          onResponse(resp);
+        });
+
+        socket.emit("chat:user", payload);
+      });
     } catch (error) {
       console.log(error);
       return false;
     }
   }
 
-  return { checkUser }
+  return { checkUser };
 }
 
 export default useUserAuthProps;

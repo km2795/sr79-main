@@ -2,24 +2,19 @@ import React, { useState } from "react";
 import "../assets/css/common.css";
 import "../assets/css/Signin.css";
 
-function Signin({screenChange, checkUser}) {
-  
+function Signin({ screenChange, checkUser }) {
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [hiddenMessage, setHiddenMessage] = useState("");
 
-  /* To show messages related to sign up process. If the hiddenMessage string
-   * is empty, the message element would remain hidden, otherwise it will be shown.
-   */
-  const [hiddenMessage, setHiddenMessage] = useState("", );
-  
   function handleBackNavigation() {
     screenChange(0);
   }
-  
+
   function handleFrontNavigation() {
     screenChange(2);
   }
-  
+
   async function handleSignIn() {
     const response = await checkUser(mobileNumber, password, "sign-in");
 
@@ -38,9 +33,9 @@ function Signin({screenChange, checkUser}) {
         <div className="signin-container-top-navigation">
           <div className="welcome-screen-top-navigation-goback" onClick={handleBackNavigation}>
             <img
-                alt="Previous Page"
-                className="app-default-navigation-button-welcome-screen"
-                src="./public/images/left_black.svg"
+              alt="Previous Page"
+              className="app-default-navigation-button-welcome-screen"
+              src="./public/images/left_black.svg"
             />
           </div>
         </div>
@@ -49,28 +44,34 @@ function Signin({screenChange, checkUser}) {
         </div>
         <div className="welcome-screen-top-navigation-gofront" onClick={handleFrontNavigation}>
           <img
-              alt="Next Page"
-              className="app-default-navigation-button-welcome-screen"
-              src="./public/images/right_black.svg"
+            alt="Next Page"
+            className="app-default-navigation-button-welcome-screen"
+            src="./public/images/right_black.svg"
           />
         </div>
       </div>
       <div className="signin-container-middle">
-        <input 
-          className="signin-input app-default-input" 
-          placeholder="Number" 
-          type="number" 
-          value={mobileNumber} 
-          onChange={(e) => setMobileNumber(e.target.value)} />
+        <input
+          className="signin-input app-default-input"
+          placeholder="Number"
+          type="number"
+          value={mobileNumber}
+          onChange={(e) => setMobileNumber(e.target.value)}
+        />
 
         <input
           className="signin-input app-default-input"
           placeholder="Password"
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)} />
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-        {hiddenMessage.length > 0 ? <div className="signin-input hidden-message"><p>{hiddenMessage}</p></div>: ""}
+        {hiddenMessage.length > 0 ? (
+          <div className="signin-input hidden-message">
+            <p>{hiddenMessage}</p>
+          </div>
+        ) : ""}
       </div>
       <div className="signin-container-bottom">
         <div className="signin-container-bottom-button" onClick={handleSignIn}>
