@@ -20,18 +20,12 @@ function useUserAuthProps(setUserName, setChatHistory, setAuthCredentials) {
    */
   async function checkUser(userName, password, authType) {
     try {
-      const payload = {
-        body: {
-          "id": userName,
-          "password": password,
-          "authType": authType
-        }
-      };
+      const payload = { "id": userName, password, authType };
 
       // ensure we have a socket; create if missing (sign-in/sign-up)
       let socket = socketFromContext;
       if (!socket) {
-        const s = createSocket({}); // pass auth if needed
+        const s = createSocket({});
         setSocket(s);
         socket = s;
       }
@@ -59,11 +53,7 @@ function useUserAuthProps(setUserName, setChatHistory, setAuthCredentials) {
           resolve(false);
         }, 5000);
 
-        socket.once("chat:user", (resp) => {
-          clearTimeout(timer);
-          onResponse(resp);
-        });
-
+        socket.once("chat:user", onResponse);
         socket.emit("chat:user", payload);
       });
     } catch (error) {
@@ -71,8 +61,49 @@ function useUserAuthProps(setUserName, setChatHistory, setAuthCredentials) {
       return false;
     }
   }
+  
+  /**
+   * Check if the recipient exists or not.
+   */
+  async function checkRecipient(userId) {
+    try {
+      let socket = socketFromContext;
+      if (!socket) {
+        const s = createSocket({}); // pass auth if needed
+        setSocket(s);
+        socket = s;
+      }
+      
+      return await new Promise((resolve) => {
+        const onResponse = (response) => {
+          try {
+            if (response && response.status) {
+              resolve(true);
+            } else if (response.status != null) {
+              resolve(false);
+            }
+          } catch (error) {
+            console.log(error);
+            resolve(null);
+          }
+        };
+        
+        // safety timeout
+        const timer = setTimeout(() => {
+          socket.off("chat:checkUser", onResponse);
+          resolve(null);
+        }, 5000);
+        
+        socket.once("chat:checkUser", onResponse);
+        socket.emit("chat:checkUser", { "recipient": userId })
+      })
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
 
-  return { checkUser };
+  return { checkUser, checkRecipient };
 }
 
 export default useUserAuthProps;
