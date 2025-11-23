@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
-import { io } from "socket.io-client";
-import { useSocket } from "./socket/SocketProvider";
+import React, { useEffect, useState } from "react";
+import { createSocket } from "./socket/Socket";
+import { useSocket, useSetSocket } from "./socket/SocketProvider";
 import ChatItem from "./ChatItem";
 import "../assets/css/ChatView.css";
 
@@ -19,87 +19,91 @@ function ChatView({
     return [...history].sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
   }
   
-  const socket = useSocket();
-  const socketRef = useRef(null);
+  const socketFromContext = useSocket();
+  const setSocket = useSetSocket();  
 
   /*
    * Set the messageList with the recipient's info.
    */
   useEffect(() => {
-    if (Array.isArray(currentRecipient.history)) {
+    if (Array.isArray(currentRecipient?.history)) {
       setMessageList(processChatHistory(currentRecipient.history));
+    } else {
+      setMessageList([]);
     }
   }, [currentRecipient]);
-  
-  /*
-   * To connect the user to the server.
-   */
-  useEffect(() => {
-    if (!socket || !authCredentials.id)
-      return;
-    
-    socket.emit("join", authCredentials.id);
-    
-    const onMessage = (message) => updateChatViewWithNewMessage(message);
-    socket.on("chat:message", onMessage);
-    
-    return () => {
-      socket.off("chat:message", onMessage);
-    }
-  }, [socket, authCredentials.id]);
   
   /**
    * To cache the message in the list, by checking its 
    * timestamp. To properly arrange it in the list.
    */
   function updateChatViewWithNewMessage(message) {
+    // never mutate props (currentRecipient). Keep local state consistent.
     setMessageList(prev => {
       const list = Array.isArray(prev) ? [...prev] : [];
-      if (list.length === 0) {
-        currentRecipient.history = [message];  
-        return [message];  
-      } else {
-        // Check the last message
-        const lastMessageTimestamp = list[list.length -1]?.timestamp ?? -Infinity;
-        
-        // If the new message has timestamp greater or equal
-        // to the last message concat it to the list.
-        if (lastMessageTimestamp <= message.timestamp) {
-          currentRecipient.history = [...list, message];
-          return [...list, message];
-      
-        // Since the message is older than the last message in the 
-        // list, sort the list and update the view accordingly.
-        } else {
-          currentRecipient.history = processChatHistory(list);
-          return processChatHistory(list);
-        }
-      }
+      // add new message
+      list.push(message);
+      // sort by timestamp to ensure ordering (older->newer)
+      list.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+      return list;
     });
   }
+  
+  /*
+   * To connect the user to the server and listen for incoming messages.
+   * include socketFromContext and authCredentials.id in deps so effect re-runs
+   * when socket becomes available or user changes.
+   */
+  useEffect(() => {
+    const socket = socketFromContext;
+    if (!socket || !authCredentials?.id) return;
 
+    const onMessage = (message) => updateChatViewWithNewMessage(message);
+    socket.on("chat:message", onMessage);
+
+    return () => {
+      socket.off("chat:message", onMessage);
+    };
+  }, [socketFromContext, authCredentials?.id]); // <- fixed deps
+  
   /**
    * To send new message to the server.
    */
-  async function sendMessage() {
+  async function sendMessage(e) {
+    if (e && e.preventDefault) e.preventDefault();
+
+    let socket = socketFromContext;
+    if (!socket) {
+      const s = createSocket({});
+      setSocket(s);
+      socket = s;
+    }
+
+    if (!socket || !authCredentials?.id) {
+      setHiddenMessage(true);
+      return;
+    }
 
     // Message to send to the server.
-    let message = {
-      "id": authCredentials.id,
-      "password": authCredentials.password,
-      "message": messageText,
-      "recipient": currentRecipient.recipient,
-      "timestamp": Date.now(),
-      "direction": "self"
+    const message = {
+      id: authCredentials.id,
+      password: authCredentials.password,
+      message: messageText,
+      recipient: currentRecipient.recipient,
+      timestamp: Date.now(),
+      direction: "self"
     };
 
     try {
-      socketRef.current?.emit("chat:message", message);
+      socket.emit("chat:message", message);
+
+      // update local view (single source of truth: messageList)
+      updateChatViewWithNewMessage(message);
       setMessageText("");
-      setMessageList(prev => [...prev, message]);
 
     } catch (err) {
-      console.log(`Error sending message: ${err.message}`);
+      console.log(`Error sending message: ${err?.message || err}`);
+      setHiddenMessage(true);
       return false;
     }
   }
@@ -160,28 +164,27 @@ function ChatView({
       <div className="chat-view-container-middle">
         <div className="chat-container">
           {
-            processChatHistory(messageList).map((message, index) =>
-              <ChatItem key={index} messageInfo={message} />)
+            processChatHistory(messageList).map((message) =>
+              <ChatItem key={message.timestamp || `${message.id}-${Math.random()}`} messageInfo={message} />)
           }
         </div>
       </div>
       
       {/* To hold the message input area. */}
       <div className="chat-view-container-bottom">
-        <form className="chat-input-form-container">
+        <form className="chat-input-form-container" onSubmit={sendMessage}>
           <input
             className="chat-input"
             placeholder="What do you have in mind?"
             value={messageText}
             onChange={(e) => setMessageText(e.target.value)}
           />
-          <div className="chat-send-button-container" onClick={sendMessage}>
+          <div className="chat-send-button-container" onClick={sendMessage} role="button" tabIndex={0}>
             <img
               alt="Send Message"
               className="chat-send-button-image chat-view-default-icon-sizing"
               src="./public/images/send_black.svg"
             />
-
           </div>
         </form>
 
