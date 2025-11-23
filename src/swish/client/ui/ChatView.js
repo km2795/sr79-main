@@ -64,12 +64,15 @@ function ChatView({
     return () => {
       socket.off("chat:message", onMessage);
     };
-  }, [socketFromContext, authCredentials?.id]); // <- fixed deps
+  }, [socketFromContext, authCredentials?.id]);
   
   /**
    * To send new message to the server.
    */
   async function sendMessage(e) {
+    // Don't send empty messages.
+    if (messageText.length < 1) return;
+
     if (e && e.preventDefault) e.preventDefault();
 
     let socket = socketFromContext;
