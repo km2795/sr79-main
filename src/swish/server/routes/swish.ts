@@ -1,6 +1,7 @@
 import http from "http";
 import { Server } from "socket.io";
 import express from 'express';
+import * as DirectoryHandler from "../handlers/DirectoryHandler";
 import * as ChatHandler from "../handlers/ChatHandler";
 import * as UserHandler from "../handlers/UserHandler";
 
@@ -8,8 +9,17 @@ const router = express.Router();
 
 let socketIo: Server | null = null;
 
+/**
+ * Initialize the Swish service router.
+ */
 export async function initSwish(server: http.Server) {
-  socketIo = new Server(server, { 
+
+  /*
+   * Load the directory configurations.
+   */
+  await DirectoryHandler.loadDirectoryConfig();
+  
+  socketIo = new Server(server, {
     path: "/swish/user/chat/",
     cors: { origin: "*" }
   });
@@ -102,9 +112,6 @@ export async function initSwish(server: http.Server) {
       }
     });
   });
-  
-  await UserHandler.checkDirectoryConfig();
-  await ChatHandler.checkChatIndexFile();
 }
 
 // Serve Swish index
