@@ -15,40 +15,6 @@ const CHAT_INDEX_FILE = path.join(DATA_STORE_DIR, "chat_index.json");
 
 export let CHAT_INDEX: ChatIndex = {};
 
-/**
- * Checks if the directory are in order.
- */
-export async function checkChatIndexFile() {
-  try {
-    const data: string = await fs.readFile(CHAT_INDEX_FILE, "utf8");
-    CHAT_INDEX = JSON.parse(data);
-    console.log("\n----CHAT INDEX Setup successfully. ----\n");
-
-  } catch (err: unknown) {
-    if (err instanceof Error)
-      console.log(`chat_index.json not found: ${err.message}`);
-    else
-      console.log(`Unknown error occurred: ${err}`);
-
-    await createChatIndexFile();
-  }
-}
-
-/**
- * Creates the user index file and data store directory
- * if not already created.
- */
-export async function createChatIndexFile() {
-  try {
-    await fs.writeFile(CHAT_INDEX_FILE, JSON.stringify(CHAT_INDEX), "utf8");
-    console.log("\n---- CHAT INDEX Created... ----\n");
-  } catch (err: unknown) {
-    if (err instanceof Error)
-      console.log(`Internal error occurred: ${err.message}`);
-    else
-      console.log(`Unknown error occurred: ${err}`);
-  }
-}
 
 /**
  * Updates the storage with the recent Chat data.
