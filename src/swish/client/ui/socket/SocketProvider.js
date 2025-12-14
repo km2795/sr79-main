@@ -1,17 +1,16 @@
 import React, { createContext, useContext, useState } from "react";
-import { createSocket, getSocket, disconnectSocket } from "./Socket";
 
 /**
  * Global socket context for the whole application.
  */
 const SocketContext = createContext({
   socket: null,
-  setSocket: () => {}
+  setSocket: () => { }
 });
 
 export function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
-  
+
   // Initially 'null' would be provided, to avoid,
   // creating multiple connections.
   return (
