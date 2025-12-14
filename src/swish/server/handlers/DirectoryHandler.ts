@@ -17,19 +17,19 @@ const USER_INDEX_FILE = path.join(DATA_STORE_DIR, "user_index.json");
 /* Chat Index. */
 const CHAT_INDEX_FILE = path.join(DATA_STORE_DIR, "chat_index.json");
 
-export let USER_INDEX: UserIndex = {};
-export let CHAT_INDEX: ChatIndex = {};
+export async function loadDirectoryConfig(): Promise<{ userIndex: UserIndex, chatIndex: ChatIndex }> {
+  let userIndex: UserIndex = {};
+  let chatIndex: ChatIndex = {};
 
-export async function loadDirectoryConfig(): Promise<void> {
   try {
     // Check if ".data_store" exists.
     await fs.access(DATA_STORE_DIR);
 
     // Check and load User Index.
-    await loadUserIndexFile();
+    userIndex = await loadUserIndexFile();
 
     // Check and load Chat Index.
-    await loadChatIndexFile();
+    chatIndex = await loadChatIndexFile();
 
   } catch (error: any) {
     if (error instanceof Error)
@@ -38,43 +38,48 @@ export async function loadDirectoryConfig(): Promise<void> {
       console.log(`Unknown error occurred while loading '.data_store': ${error}\n`);
 
     // Create the '.data_store' directory first.
-    await fs.mkdir(DATA_STORE_DIR);
+    await fs.mkdir(DATA_STORE_DIR, { recursive: true });
 
     console.log("\n----Data Store established... ----\n");
 
     // Create User Index file.
-    await createUserIndexFile();
+    await createUserIndexFile(userIndex);
 
     // Create Chat Index file.
-    await createChatIndexFile();
+    await createChatIndexFile(chatIndex);
   }
-  
+
   console.log("\n---- Directory Configurations Loaded ----\n");
+  return { userIndex, chatIndex };
 }
 
-async function loadUserIndexFile() {
+async function loadUserIndexFile(): Promise<UserIndex> {
   try {
     const data = await fs.readFile(USER_INDEX_FILE, "utf8");
-    USER_INDEX = JSON.parse(data);
+    const index = JSON.parse(data);
     console.log("\n----USER INDEX Setup successfully. ----\n");
+    return index;
   } catch (error: any) {
     if (error instanceof Error)
       console.log(`Internal error occurred: ${error.message}`);
     else
       console.log(`Unknown error occurred: ${error}`);
+    throw error;
   }
 }
 
-async function loadChatIndexFile() {
+async function loadChatIndexFile(): Promise<ChatIndex> {
   try {
     const data = await fs.readFile(CHAT_INDEX_FILE, "utf8");
-    CHAT_INDEX = JSON.parse(data);
+    const index = JSON.parse(data);
     console.log("\n----CHAT INDEX Setup successfully. ----\n");
+    return index;
   } catch (error: any) {
     if (error instanceof Error)
       console.log(`Internal error occurred: ${error.message}`);
     else
       console.log(`Unknown error occurred: ${error}`);
+    throw error;
   }
 }
 
@@ -82,7 +87,7 @@ async function loadChatIndexFile() {
  * Creates the user index file and data store directory
  * if not already created.
  */
-export async function createUserIndexFile() {
+export async function createUserIndexFile(USER_INDEX: UserIndex) {
   try {
     await fs.writeFile(USER_INDEX_FILE, JSON.stringify(USER_INDEX), "utf8");
     console.log("\n---- USER INDEX created... ----\n");
@@ -98,7 +103,7 @@ export async function createUserIndexFile() {
  * Creates the user index file and data store directory
  * if not already created.
  */
-export async function createChatIndexFile() {
+export async function createChatIndexFile(CHAT_INDEX: ChatIndex) {
   try {
     await fs.writeFile(CHAT_INDEX_FILE, JSON.stringify(CHAT_INDEX), "utf8");
     console.log("\n---- CHAT INDEX Created... ----\n");

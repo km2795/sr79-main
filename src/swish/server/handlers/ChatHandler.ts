@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs/promises";
-import {fileURLToPath} from "url";
+import { fileURLToPath } from "url";
 import type { ChatIndex, ChatInfo } from "../types/ChatHandler.types";
 
 // Setup present directory.
@@ -13,13 +13,10 @@ const DATA_STORE_DIR = path.join(__dirname, "..", ".data_store");
 /* Chat Index. */
 const CHAT_INDEX_FILE = path.join(DATA_STORE_DIR, "chat_index.json");
 
-export let CHAT_INDEX: ChatIndex = {};
-
-
 /**
  * Updates the storage with the recent Chat data.
  */
-export async function updateChatIndexFile(chat: ChatInfo | null) {
+export async function updateChatIndexFile(CHAT_INDEX: ChatIndex, chat: ChatInfo | null) {
   try {
     if (chat) {
       const userId = CHAT_INDEX[chat.id];
@@ -45,13 +42,13 @@ export async function updateChatIndexFile(chat: ChatInfo | null) {
           }
         }
       }
-      
+
       const recipientId = CHAT_INDEX[chat.recipient];
       if (recipientId) {
         const userId = recipientId[chat.id];
         if (userId && chat.id in recipientId) {
           if (userId && chat.id in recipientId)
-          userId["preview"] = chat.message;
+            userId["preview"] = chat.message;
           userId["timestamp"] = chat.timestamp;
           userId["history"].push({
             "direction": "recipient",
