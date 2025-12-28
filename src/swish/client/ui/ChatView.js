@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { createSocket } from "./socket/Socket";
 import { useSocket, useSetSocket } from "./socket/SocketProvider";
 import ChatItem from "./ChatItem";
 import "../assets/css/ChatView.css";
 
-function ChatView({ 
+function ChatView({
   screenChange,
   currentRecipient,
   authCredentials,
@@ -13,14 +13,15 @@ function ChatView({
   const [messageText, setMessageText] = useState("");
   const [hiddenMessage, setHiddenMessage] = useState(false);
   const [messageList, setMessageList] = useState([]);
+  const chatMiddleRef = useRef(null);
 
   function processChatHistory(history) {
-    if(!Array.isArray(history)) return [];
+    if (!Array.isArray(history)) return [];
     return [...history].sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
   }
-  
+
   const socketFromContext = useSocket();
-  const setSocket = useSetSocket();  
+  const setSocket = useSetSocket();
 
   /*
    * Set the messageList with the recipient's info.
@@ -32,7 +33,7 @@ function ChatView({
       setMessageList([]);
     }
   }, [currentRecipient]);
-  
+
   /**
    * To cache the message in the list, by checking its 
    * timestamp. To properly arrange it in the list.
@@ -48,11 +49,9 @@ function ChatView({
       return list;
     });
   }
-  
+
   /*
    * To connect the user to the server and listen for incoming messages.
-   * include socketFromContext and authCredentials.id in deps so effect re-runs
-   * when socket becomes available or user changes.
    */
   useEffect(() => {
     const socket = socketFromContext;
@@ -65,7 +64,16 @@ function ChatView({
       socket.off("chat:message", onMessage);
     };
   }, [socketFromContext, authCredentials?.id]);
-  
+
+  /*
+   * Scroll to the bottom of the chat list when a new message is added.
+   */
+  useEffect(() => {
+    if (chatMiddleRef.current) {
+      chatMiddleRef.current.scrollTop = chatMiddleRef.current.scrollHeight;
+    }
+  }, [messageList]);
+
   /**
    * To send new message to the server.
    */
@@ -162,17 +170,22 @@ function ChatView({
 
         </div>
       </div>
-      
+
       {/* To hold the message view area. */}
-      <div className="chat-view-container-middle">
+      <div className="chat-view-container-middle" ref={chatMiddleRef}>
         <div className="chat-container">
           {
-            processChatHistory(messageList).map((message) =>
-              <ChatItem key={message.timestamp || `${message.id}-${Math.random()}`} messageInfo={message} />)
+            processChatHistory(messageList).map((message) => (
+              <ChatItem
+                key={message.timestamp || `${message.id}-${Math.random()}`}
+                messageInfo={message}
+              />
+            ))
           }
+
         </div>
       </div>
-      
+
       {/* To hold the message input area. */}
       <div className="chat-view-container-bottom">
         <form className="chat-input-form-container" onSubmit={sendMessage}>
