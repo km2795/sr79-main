@@ -54,7 +54,17 @@ function ChatView({
    * To connect the user to the server and listen for incoming messages.
    */
   useEffect(() => {
-    const socket = socketFromContext;
+    let socket = socketFromContext;
+    
+    // Create socket for incoming messages.
+    // Otherwise, before sending any message, 
+    // no messages would be received.
+    if (!socket) {
+      const s = createSocket({});
+      setSocket(s);
+      socket = s;
+    }
+
     if (!socket || !authCredentials?.id) return;
 
     const onMessage = (message) => updateChatViewWithNewMessage(message);
