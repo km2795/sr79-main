@@ -3,7 +3,7 @@ import ScreenComponentIndex from "./ScreenComponentIndex";
 import useNavigationProps from "./hooks/navigation/useNavigationProps";
 import useUserAuthProps from "./hooks/auth/useUserAuthProps";
 import useChatProps from "./hooks/chat/useChatProps";
-import { SocketProvider } from "./socket/SocketProvider";
+import { SocketProvider } from "./contexts/socket/SocketProvider";
 import "../assets/css/main.css";
 
 

@@ -2,7 +2,6 @@ import { io } from "socket.io-client";
 
 // Socket object.
 let socket = null;
-let created = false;
 
 /**
  * Socket creation helper.
@@ -20,7 +19,6 @@ export function createSocket(auth) {
 
   socket.on("connect", () => console.log("socket connected", socket.id));
   socket.on("connect_error", (err) => console.error("socket connect_error", err));
-  created = true;
 
   if (!socket.connected) {
     socket.connect();
@@ -45,5 +43,4 @@ export function disconnectSocket() {
 
   socket.disconnect();
   socket = null;
-  created = false;
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { createSocket } from "./socket/Socket";
-import { useSocket, useSetSocket } from "./socket/SocketProvider";
+import { createSocket } from "./contexts/socket/Socket";
+import { useSocket, useSetSocket } from "./contexts/socket/SocketProvider";
 import ChatItem from "./ChatItem";
 import "../assets/css/ChatView.css";
 

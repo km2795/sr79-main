@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useSocket, useSetSocket } from "../../socket/SocketProvider";
-import { createSocket } from "../../socket/Socket";
+import { useSocket, useSetSocket } from "../../contexts/socket/SocketProvider";
+import { createSocket } from "../../contexts/socket/Socket";
 
 function useUserAuthProps(setUserName, setChatHistory, setAuthCredentials) {
   const socketFromContext = useSocket();
