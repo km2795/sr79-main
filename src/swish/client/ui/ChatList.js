@@ -1,19 +1,18 @@
 import React, {useState} from "react";
 import AddRecipientDialog from "./AddRecipientDialog";
 import ChatListDirectoryItem from "./ChatListDirectoryItem";
+import { useChatHistory } from "./contexts/data_master/DataProvider";
 import "../assets/css/ChatList.css"
 
 function ChatList({ 
   userName,
-  chatHistory,
   screenChange,
   updateCurrentRecipient,
   checkRecipient
 }) {
-
-  /* If history is undefined or null, pass an empty list (at least). */
-  chatHistory = chatHistory ? chatHistory : [];
-
+  
+  const chatHistory = useChatHistory();
+    
   /*
    * To show/hide the add recipient dialog box.
    */

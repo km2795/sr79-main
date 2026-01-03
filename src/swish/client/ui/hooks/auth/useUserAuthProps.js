@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useSocket, useSetSocket } from "../../contexts/socket/SocketProvider";
 import { createSocket } from "../../contexts/socket/Socket";
+import { useSetChatHistory } from "../../contexts/data_master/DataProvider";
 
-function useUserAuthProps(setUserName, setChatHistory, setAuthCredentials) {
+function useUserAuthProps(setUserName, setAuthCredentials) {
   const socketFromContext = useSocket();
   const setSocket = useSetSocket();
+  const setChatHistory = useSetChatHistory();
 
   /**
    * Function to check if the user exists in the records or not.
