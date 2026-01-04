@@ -10,13 +10,6 @@ function App() {
 
   /* Which screen is displayed currently. */
   const [screenIndex, setScreenIndex] = useState(0);
-  const [userName, setUserName] = useState("");
-
-  /* Current recipient. */
-  const [currentRecipient, setCurrentRecipient] = useState("");
-
-  /* For concurrent chat send/reception. Will be replaced by temporary auth tokens. */
-  const [authCredentials, setAuthCredentials] = useState({ id: "", password: "" });
 
   /*
    * Screen Component to be displayed.
@@ -27,11 +20,8 @@ function App() {
 
   const userProps = {
     ...useNavigationProps(setScreenIndex),
-    ...useUserAuthProps(setUserName, setAuthCredentials),
-    ...useChatProps(setCurrentRecipient),
-    userName,
-    currentRecipient,
-    authCredentials
+    ...useUserAuthProps(),
+    ...useChatProps(),
   };
 
   return (

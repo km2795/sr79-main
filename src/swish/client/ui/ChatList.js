@@ -1,17 +1,21 @@
 import React, {useState} from "react";
 import AddRecipientDialog from "./AddRecipientDialog";
 import ChatListDirectoryItem from "./ChatListDirectoryItem";
-import { useChatHistory } from "./contexts/data_master/DataProvider";
+import { useSocket, useSetSocket } from "./contexts/socket/SocketProvider";
+import { createSocket } from "./contexts/socket/Socket";
+import { useUserName, useChatHistory, useSetCurrentRecipient } from "./contexts/data_master/DataProvider";
 import "../assets/css/ChatList.css"
 
 function ChatList({ 
-  userName,
   screenChange,
-  updateCurrentRecipient,
   checkRecipient
 }) {
   
+  const socket = useSocket();
+  const setSocket = useSetSocket();
   const chatHistory = useChatHistory();
+  const userName = useUserName();
+  const updateCurrentRecipient = useSetCurrentRecipient();
     
   /*
    * To show/hide the add recipient dialog box.

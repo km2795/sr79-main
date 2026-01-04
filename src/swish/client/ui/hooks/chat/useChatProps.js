@@ -1,9 +1,11 @@
 import axios from "axios";
+import { useSetCurrentRecipient } from "../../contexts/data_master/DataProvider";
 
-function useChatProps(setCurrentRecipient) {
+function useChatProps() {
+  const setCurrentRecipient = useSetCurrentRecipient();
 
   return {
-    updateCurrentRecipient: (chat) => setCurrentRecipient(chat),
+    updateCurrentRecipient: (chat) => setCurrentRecipient(chat)
   }
 
 }

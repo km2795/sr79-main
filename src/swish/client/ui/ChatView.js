@@ -1,14 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
 import { createSocket } from "./contexts/socket/Socket";
 import { useSocket, useSetSocket } from "./contexts/socket/SocketProvider";
+import { useCurrentRecipient, useAuthCredentials } from "./contexts/data_master/DataProvider";
 import ChatItem from "./ChatItem";
 import "../assets/css/ChatView.css";
 
-function ChatView({
-  screenChange,
-  currentRecipient,
-  authCredentials,
-}) {
+function ChatView({ screenChange }) {
+  
+  const currentRecipient = useCurrentRecipient();
+  const authCredentials = useAuthCredentials();
+  const socketFromContext = useSocket();
+  const setSocket = useSetSocket();
 
   const [messageText, setMessageText] = useState("");
   const [hiddenMessage, setHiddenMessage] = useState(false);
@@ -19,9 +21,6 @@ function ChatView({
     if (!Array.isArray(history)) return [];
     return [...history].sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
   }
-
-  const socketFromContext = useSocket();
-  const setSocket = useSetSocket();
 
   /*
    * Set the messageList with the recipient's info.
