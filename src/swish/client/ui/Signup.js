@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import "../assets/css/common.css";
 import "../assets/css/Signup.css"
 
-function Signup({screenChange, checkUser}) {
+function Signup({ screenChange, checkUser }) {
 
   //mobileNumber (is userName).
   const [mobileNumber, setMobileNumber,] = useState("");
@@ -12,23 +12,23 @@ function Signup({screenChange, checkUser}) {
   /* To show messages related to sign up process. If the hiddenMessage string
    * is empty, the message element would remain hidden, otherwise it will be shown.
    */
-  const [hiddenMessage, setHiddenMessage] = useState("", );
+  const [hiddenMessage, setHiddenMessage] = useState("",);
 
   // Go back to Welcome Screen.
   function handleBackNavigation() {
     screenChange(0);
   }
-  
+
   // Go to Sign In Screen.
   function handleFrontNavigation() {
     screenChange(1);
   }
-  
+
   // Handle the Sign-Up.
   async function handleSignUp() {
     const response = await checkUser(mobileNumber, password, "sign-up");
 
-    // If user's data is store, move to chat list screen.
+    // If user's data is stored, move to chat list screen.
     if (response) {
       screenChange(3);
     } else {
@@ -62,11 +62,11 @@ function Signup({screenChange, checkUser}) {
         </div>
       </div>
       <div className="signup-container-middle">
-        <input 
-          className="signup-input app-default-input" 
-          placeholder="Number" 
-          type="number" 
-          value={mobileNumber} 
+        <input
+          className="signup-input app-default-input"
+          placeholder="Number"
+          type="number"
+          value={mobileNumber}
           onChange={(e) => setMobileNumber(e.target.value)} />
 
         <input
@@ -76,7 +76,7 @@ function Signup({screenChange, checkUser}) {
           type="password"
           onChange={(e) => setPassword(e.target.value)} />
 
-        {hiddenMessage.length > 0 ? <div className="signup-input hidden-message"><p>{hiddenMessage}</p></div>: ""}
+        {hiddenMessage.length > 0 ? <div className="signup-input hidden-message"><p>{hiddenMessage}</p></div> : ""}
       </div>
       <div className="signup-container-bottom">
         <div className="signup-container-bottom-button" onClick={handleSignUp}>

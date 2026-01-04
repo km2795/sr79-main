@@ -1,32 +1,59 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import AddRecipientDialog from "./AddRecipientDialog";
 import ChatListDirectoryItem from "./ChatListDirectoryItem";
 import { useSocket, useSetSocket } from "./contexts/socket/SocketProvider";
 import { createSocket } from "./contexts/socket/Socket";
-import { useUserName, useChatHistory, useSetCurrentRecipient } from "./contexts/data_master/DataProvider";
+import { useUserName, useChatHistory, useSetChatHistory, useSetCurrentRecipient, useAuthCredentials } from "./contexts/data_master/DataProvider";
 import "../assets/css/ChatList.css"
 
-function ChatList({ 
+function ChatList({
   screenChange,
   checkRecipient
 }) {
-  
+
   const socket = useSocket();
   const setSocket = useSetSocket();
   const chatHistory = useChatHistory();
+  const setChatHistory = useSetChatHistory();
   const userName = useUserName();
+  const authCredentials = useAuthCredentials();
   const updateCurrentRecipient = useSetCurrentRecipient();
-    
+
+  /*
+   * To update the state of the chat history.
+   */
+  useEffect(() => {
+    // Check if the socket is there or not.
+    if (!socket) {
+      const s = createSocket();
+      setSocket(s);
+      socket = s;
+    }
+    // Message to send to the server.
+    const payload = {
+      id: authCredentials.id,
+      password: authCredentials.password
+    };
+
+    // Send the payload to receive the updated chat history.
+    socket.emit("chat:chatHistory", payload);
+
+    // Receive the updated chat history.
+    socket.on("chat:chatHistory", (data) => {
+      setChatHistory(data);
+    });
+  });
+
   /*
    * To show/hide the add recipient dialog box.
    */
   const [showAddRecipientDialog, setShowAddRecipientDialog] = useState(false);
-  
+
   /*
    * Recipient Add dialog box's hidden message.
    */
   const [recipientDialogMessage, setRecipientDialogMessage] = useState("");
-  
+
   /*
    * Visibility of the add recipient dialog's message.
    */
@@ -75,9 +102,9 @@ function ChatList({
           <div className="chat-list-user-profile">
             {/* User's profile photo. */}
             <img
-                alt="Profile Photo"
-                className="chat-list-user-profile-photo-icon chat-view-default-icon-sizing"
-                src="./public/images/user_black.svg"
+              alt="Profile Photo"
+              className="chat-list-user-profile-photo-icon chat-view-default-icon-sizing"
+              src="./public/images/user_black.svg"
             />
 
             {/* Username is displayed here. */}
@@ -104,14 +131,14 @@ function ChatList({
             chatHistory.length < 1
               ? <div className="chat-list-directory-empty-banner">It's so quiet in here!</div>
               : Object.keys(chatHistory).map((chatKey, index) =>
-                  <ChatListDirectoryItem
-                    key={index}
-                    recipient={chatKey}
-                    chatInfo={chatHistory[chatKey]}
-                    screenChange={screenChange}
-                    updateCurrentRecipient={updateCurrentRecipient}
-                  />
-                )
+                <ChatListDirectoryItem
+                  key={index}
+                  recipient={chatKey}
+                  chatInfo={chatHistory[chatKey]}
+                  screenChange={screenChange}
+                  updateCurrentRecipient={updateCurrentRecipient}
+                />
+              )
           }
         </div>
 
