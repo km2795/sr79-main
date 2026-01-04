@@ -109,6 +109,23 @@ export async function initSwish(server: http.Server) {
       }
     });
 
+    /*
+     * Chat History retrieval event.
+     */
+    socket.on("chat:chatHistory", async (payload: any) => {
+      try {
+        if (authenticateCredentials(payload.id, payload.password)) {
+          socket.emit("chat:chatHistory", CHAT_INDEX[payload.id]);
+        }
+      } catch (error: any) {
+        if (error instanceof Error) {
+          console.log(`[chat:chatHistory] Error Sending Chat History: ${error.message}`);
+        } else {
+          console.log(`[chat:chatHistory] Unknown error occurred: ${error}`);
+        }
+      }
+    });
+
     /* 
      * Chat message receiving event.
      */
@@ -124,6 +141,7 @@ export async function initSwish(server: http.Server) {
 
             // Relay to the intended recipient.
             socketIo.to(payload.recipient).emit("chat:message", payload);
+            socketIo.to(payload.recipient).emit("chat:chatHistory", CHAT_INDEX[payload.recipient]);
           }
         } else {
           ;
